@@ -36,9 +36,9 @@ rng("default");
 %[text] We'll store our queue simulation objects in this list.
 QSamples = cell([NumSamples, 1]);
 %[text] The statistics come out weird if the log interval is too short, because the log entries are not independent enough.  So the log interval should be long enough for several arrival and departure events happen.
-for SampleNum = 1:NumSamples
+for SampleNum = 1:NumSamples %[output:group:9e44deab]
     if mod(SampleNum, 10) == 0
-        fprintf("%d ", SampleNum);
+        fprintf("%d ", SampleNum); %[output:574bd9fa]
     end
     if mod(SampleNum, 100) == 0
         fprintf("\n");
@@ -51,7 +51,7 @@ for SampleNum = 1:NumSamples
     q.schedule_event(Arrival(random(q.InterArrivalDist), Customer(1)));
     run_until(q, MaxTime);
     QSamples{SampleNum} = q;
-end
+end %[output:group:9e44deab]
 %%
 %[text] ## Collect measurements of how many customers are in the system
 %[text] Count how many customers are in the system at each log entry for each sample run.  There are two ways to do this.  You only have to do one of them.
@@ -145,7 +145,7 @@ TimeInSystem = vertcat(TimeInSystemSamples{:});
 %%
 %[text] ## Pictures and stats for time customers spend in the system
 %[text] Print out mean time spent in the system.
-meanTimeInSystem = mean(TimeInSystem);
+meanTimeInSystem = mean(TimeInSystem); %[output:13dd1544]
 fprintf("Mean time in system: %f\n", meanTimeInSystem);
 %[text] Make a figure with one set of axes.
 fig = figure();
@@ -165,9 +165,17 @@ pause(2);
 %[text] Save the picture.
 exportgraphics(fig, PictureFolder + filesep + "Time in system histogram.pdf");
 exportgraphics(fig, PictureFolder + filesep + "Time in system histogram.svg");
+%%
+% hello
 
 %[appendix]{"version":"1.0"}
 %---
 %[metadata:view]
 %   data: {"layout":"inline"}
+%---
+%[output:574bd9fa]
+%   data: {"dataType":"text","outputData":{"text":"10 ","truncated":false}}
+%---
+%[output:13dd1544]
+%   data: {"dataType":"error","outputData":{"errorType":"runtime","text":"Unrecognized function or variable 'TimeInSystem'."}}
 %---
