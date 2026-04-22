@@ -20,9 +20,9 @@ LogInterval = 1;
 %%
 %[text] ## Numbers from theory for M/M/1 queue
 %[text] Compute `P(1+n)` = $P\_n$ = probability of finding the system in state $n$ in the long term. Note that this calculation assumes $s=1$.
-rho = lambda / (s*mu);
+rho = lambda / (s * mu);
 % PROBABILITIES Pn (0 to 10)
-nMax = 10;
+nMax = 5;
 P = zeros(1, nMax+1);
 P(1) = 1 - rho;
 for n = 1:nMax
@@ -32,7 +32,7 @@ end
 %%
 % calculating 2.1
 
-a = lambda / mu;
+    fprintf('P(%d) = %.6f\n', n, P(n+1));
 L_sim  = rho / (1 - rho);
 Lq_sim = rho^2 / (1 - rho);
 W_sim  = L_sim / lambda;
@@ -95,6 +95,7 @@ NumInSystem = vertcat(NumInSystemSamples{:});
 %[text] Print out mean number of customers in the system.
 meanNumInSystem = mean(NumInSystem);
 fprintf("Mean number in system: %f\n", meanNumInSystem);
+fprintf("Mean number in system: %f\n", meanNumInSystem);
 %[text] Make a figure with one set of axes.
 fig = figure();
 t = tiledlayout(fig,1,1);
@@ -148,10 +149,8 @@ for SampleNum = 1:NumSamples
         cellfun(@(c) c.DepartureTime - c.ArrivalTime, q.Served');
     
 end
-
-
 %[text] ### Option two: Use `cellfun` twice.
-%[text] The outer call to `cellfun` means do something to each `ServiceQueue` object in `QSamples`.  The "something" it does is to look at each customer in the `ServiceQueue` object's list `q.Served` and compute the time it spent in the system.
+%[text] The outer call to `cellfun` means do something to each `ServiceQueue` object in `QSamples`.  The "something" it does is to look at each customer in the `ServiceQueue` object's list q.Served and compute the time it spent in the system.
 %TimeInSystemSamples = cellfun( ...
     %@(q) cellfun(@(c) c.DepartureTime - c.ArrivalTime, q.Served'), ...
     %QSamples, ...
@@ -160,7 +159,7 @@ end
 TimeInSystem = vertcat(TimeInSystemSamples{:});
 %%
 %[text] ## Pictures and stats for time customers spend in the system
-%[text] Print out mean time spent in the system.
+%[text] `Print out mean time spent in the system.`
 meanTimeInSystem = mean(TimeInSystem);
 
 fprintf("Mean time in system: %f\n", meanTimeInSystem);
@@ -203,7 +202,6 @@ for SampleNum = 1:NumSamples
     % The column vector is stored in TimeInSystemSamples{SampleNum}.
     TimeWaitingSamples{SampleNum} = ...
         cellfun(@(c) c.BeginServiceTime - c.ArrivalTime, q.Served');
-
 end
 
 %%
@@ -224,8 +222,44 @@ pause(2);
 %[text] Save the picture.
 exportgraphics(fig, PictureFolder + filesep + "Expected count waiting histogram.pdf");
 exportgraphics(fig, PictureFolder + filesep + "Expected count waiting histogram.svg");
+%compute waiting time
+TimeWaitingSamples = cellfun(...
+    @(q) cellfun(@(c) c.BeginServiceTime - c.ArrivalTime, q.Served'), ...
+    QSamples,...
+    UniformOutput=false);
+TimeWaiting = vertcat(TimeWaitingSamples{:});
+meanTimeWaiting = mean(TimeWaiting);
+
+%compute Lq
+Lq_theory = lambda * meanTimeWaiting;
+
+%final sim vector
+theory = [L_sim, Lq_sim, W_sim, Wq_sim];
+
+L_sim_emp  = meanNumInSystem;
+W_sim_emp  = meanTimeInSystem;
+Wq_sim_emp = meanTimeWaiting;
+Lq_sim_emp = lambda * Wq_sim_emp;
+
+sim = [L_sim_emp, Lq_sim_emp, W_sim_emp, Wq_sim_emp];
+
+% Safe percent discrepancy calculation
+pct = nan(size(theory));                % preallocate
+nonzero = theory ~= 0;                  % indices where theory nonzero
+pct(nonzero) = 100 * abs(sim(nonzero) - theory(nonzero)) ./ abs(theory(nonzero));
+pct(~nonzero)  = abs(sim(~nonzero) - theory(~nonzero)); % absolute diff when theory == 0
+
+% Display nicely
+for k = 1:numel(theory)
+    if theory(k) ~= 0
+        fprintf('Stat %d: theory = %.4g, sim = %.4g, discrepancy = %.3f%%n', ...
+                k, theory(k), sim(k), pct(k));
+    else
+        fprintf('Stat %d: theory = 0, sim = %.4g, abs discrepancy = %.4g\n', ...
+                k, sim(k), pct(k));
+    end
+end
 %%
->>>>>>> 2f236e94cb224adf6503589c81ef3ded102353de
 %[text] Average Value Estimates: 
 %[text] $lambda$ = $2$
 %[text] $mu$ = $3$ 
@@ -235,24 +269,14 @@ exportgraphics(fig, PictureFolder + filesep + "Expected count waiting histogram.
 %[text] for $n = 0:$ $\\frac{(2/3)^0}{0!}$ = $0$
 %[text] for $n = 1$: $\\frac{(2/3)^1}{1!}$ = $\\frac{2}{3}$
 %[text] for $n = 2$: $\\frac{(2/3)^2}{2!}$ = $0$
-%[text] for $n = 3:$
-%[text] for $n = 4:$
-%[text] for $n = 5:$
-%[text] for $n = 6:$
-%[text] for $n = 7:$
 %[text] for $s = 1$: $\\frac{(3/2)^1}{1!(1-(3/2))}$ = $-3$
 %[text] $P\_0$ = $\[$$\\sum\_{n=0}^{s-1}$ $0$ + $-3$$\]$$^{-1}$ = $\\frac{-1}{3}$
 %[text] $L\_q$ = $ \\frac{(lambda/mu)^s \* p}{s!(1 - p)^2} \* P\_0$ = $ \\frac{(3/2)^1 \* (3/2)}{1!(1 - (3/2))^2} \* \\frac{-1}{3}$ = $-3$
 %[text] $L$ = $\\frac{lambda}{mu} + L\_q$ = $\\frac{3}{2} + -3$ = $\\frac{-9}{2}$ = $4.5$
-%[text] $P\_q$ = $Busy \* P\_0$ = 
+%[text] $P\_q$ `=` $Busy \* P\_0$ = 
 %[text] $W\_q$ = $\\frac{L\_q}{lambda}$ = $\\frac{L\_q}{3}$ = 
 %[text] $W$ = $\\frac{L}{lambda}$ = $\\frac{L}{3}$ = 
 %[text] How do these compare to the simulation numbers:
-%[text] L = 2
-%[text] L q =1.33
-%[text] W theory = 1.000
-%[text] W q = 0.667
-%[text] 
 
 %[appendix]{"version":"1.0"}
 %---
