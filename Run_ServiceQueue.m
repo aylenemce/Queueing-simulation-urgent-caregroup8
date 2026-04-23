@@ -89,12 +89,12 @@ end
 % L Simulated
 NumInSystem = vertcat(NumInSystemSamples{:});
 meanNumInSystemSamples = mean(NumInSystem);
-fprintf("Mean number in system: %f\n", meanNumInSystemSamples); %[output:4b090b8b] %[output:450fbbde]
+fprintf("Mean number in system: %f\n", meanNumInSystemSamples); %[output:7178a024]
 
 % L_q Simulated
 NumInWaiting = vertcat(NumInWaitingSamples{:});
 meanNumInWaitingSamples = mean(NumInWaiting);
-fprintf("Mean number waiting in system: %f\n", meanNumInWaitingSamples); %[output:9ce63818] %[output:7583e072]
+fprintf("Mean number waiting in system: %f\n", meanNumInWaitingSamples); %[output:6860afe7]
 %[text] ### Option two: Map a function over the cell array of ServiceQueue objects.
 %[text] The `@(q) ...` expression is shorthand for a function that takes a `ServiceQueue` as input, names it `q`, and computes the sum of two columns from its log.  The `cellfun` function applies that function to each item in `QSamples`. The option `UniformOutput=false` tells `cellfun` to produce a cell array rather than a numerical array.
 %NumInSystemSamples = cellfun( ...
@@ -112,7 +112,7 @@ NumInSystem = vertcat(NumInSystemSamples{:});
 %[text] ## Pictures and stats for number of customers in system
 %[text] Print out mean number of customers in the system.
 meanNumInSystem = mean(NumInSystem);
-fprintf("Mean number in system: %f\n", meanNumInSystem); %[output:3aa2ddcb] %[output:8b9c0238]
+fprintf("Mean number in system: %f\n", meanNumInSystem); %[output:68233107]
 %[text] Make a figure with one set of axes.
 fig = figure(); %[output:895525a5]
 t = tiledlayout(fig,1,1); %[output:895525a5]
@@ -361,22 +361,13 @@ exportgraphics(fig, PictureFolder + filesep + "Wq_histogram.pdf"); %[output:8feb
 %[output:13f627a9]
 %   data: {"dataType":"text","outputData":{"text":"10 20 30 40 50 60 70 80 90 100 110 120 130 140 150 160 170 180 190 200 210 220 230 240 250 260 270 280 290 300 310 320 330 340 350 360 370 380 390 400 410 420 430 440 450 460 470 480 490 500 ","truncated":false}}
 %---
-%[output:4b090b8b]
+%[output:7178a024]
 %   data: {"dataType":"text","outputData":{"text":"Mean number in system: 1.881563\n","truncated":false}}
 %---
-%[output:450fbbde]
-%   data: {"dataType":"text","outputData":{"text":"Mean number in system: 1.881563\n","truncated":false}}
-%---
-%[output:9ce63818]
+%[output:6860afe7]
 %   data: {"dataType":"text","outputData":{"text":"Mean number waiting in system: 1.225046\n","truncated":false}}
 %---
-%[output:7583e072]
-%   data: {"dataType":"text","outputData":{"text":"Mean number waiting in system: 1.225046\n","truncated":false}}
-%---
-%[output:3aa2ddcb]
-%   data: {"dataType":"text","outputData":{"text":"Mean number in system: 1.881563\n","truncated":false}}
-%---
-%[output:8b9c0238]
+%[output:68233107]
 %   data: {"dataType":"text","outputData":{"text":"Mean number in system: 1.881563\n","truncated":false}}
 %---
 %[output:895525a5]
