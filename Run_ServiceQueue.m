@@ -318,17 +318,20 @@ end %[output:group:2ed6cdf5]
 %[text] $mu$ = $3$ 
 %[text] $s$ = $1$
 %[text] $p$ = $\\frac{lambda}{s \* mu}$ = $\\frac{2}{(3)(1)}$ = $\\frac{2}{3}$
-%[text] $P\_0$ = $\[$$\\sum\_{n=0}^{s-1}$$\\frac{(lambda/mu)^n}{n!}$ + $\\frac{(lambda/mu)^s}{s!(1-p)}$$\]$$^{-1}$
-%[text] for $n = 0:$ $\\frac{(2/3)^0}{0!}$ = $0$
-%[text] for $n = 1$: $\\frac{(2/3)^1}{1!}$ = $\\frac{2}{3}$
-%[text] for $n = 2$: $\\frac{(2/3)^2}{2!}$ = $0$
-%[text] for $s = 1$: $\\frac{(3/2)^1}{1!(1-(3/2))}$ = $-3$
-%[text] $P\_0$ = $\[$$\\sum\_{n=0}^{s-1}$ $0$ + $-3$$\]$$^{-1}$ = $\\frac{-1}{3}$
-%[text] $L\_q$ = $ \\frac{(lambda/mu)^s \* p}{s!(1 - p)^2} \* P\_0$ = $ \\frac{(3/2)^1 \* (3/2)}{1!(1 - (3/2))^2} \* \\frac{-1}{3}$ = $-3$
-%[text] $L$ = $\\frac{lambda}{mu} + L\_q$ = $\\frac{3}{2} + -3$ = $\\frac{-9}{2}$ = $4.5$
-%[text] $P\_q$ `=` $Busy \* P\_0$ = 
-%[text] $W\_q$ = $\\frac{L\_q}{lambda}$ = $\\frac{L\_q}{3}$ = 
-%[text] $W$ = $\\frac{L}{lambda}$ = $\\frac{L}{3}$ = 
+%[text] $P\_0$ = $(1-p)\*p^n$ 
+%[text] for $n = 0:$ $(1-p)\*p^0=(1-\\frac{2}{3})\*\\frac{2}{3}^0=\\frac{1}{3}\*1=\\frac{1}{3}=0.3333$
+%[text] for $n = 1$: $(1-p)\*p^1=\\frac{1}{3}\*\\frac{2}{3}^1=\\frac{2}{9}=0.2222$
+%[text] for $n = 2$: $(1-p)\*p^2=\\frac{1}{3}\*\\frac{2}{3}^2=\\frac{4}{27}=0.148$
+%[text] for $n=3$: $(1-p)\*p^3=\\frac{1}{3}\*\\frac{2}{3}^3=\\frac{8}{81}=0.0987$
+%[text] for $n=4$: $(1-p)\*p^4=\\frac{1}{3}\*\\frac{2}{3}^4=\\frac{16}{243}=0.0658$
+%[text] for $n=5$: $(1-p)\*p^5=\\frac{1}{3}\*\\frac{2}{3}^5=\\frac{32}{729}=0.0438$ 
+%[text] for $s = 1$: $\\frac{(2/3)^1}{1!(1-(2/3))}$ = $2$
+%[text] $P\_0$ = $(1-\\frac{2}{3})=\\frac{1}{3}$
+%[text] $L\_q$ = $\\frac{p}{1-p}=\\frac{\\frac{2}{3}}{1-(\\frac{2}{3})}=\\frac{\\frac{2}{3}}{\\frac{1}{3}}=2$
+%[text] $L$ = $\\frac{p^2}{1-p}=\\frac{\\frac{2}{3}^2}{\\frac{1}{3}}=\\frac{\\frac{4}{9}}{\\frac{1}{3}}=\\frac{12}{9}=\\frac{4}{3}$
+%[text] $P\_q$ `=` $p=\\frac{2}{3}$
+%[text] $W\_q$ = $\\frac{L}{lambda}=\\frac{2}{2}=1$
+%[text] $W$ = $\\frac{L\_q}{lambda}=\\frac{\\frac{4}{3}}{2}=\\frac{4}{6}=\\frac{2}{3}$
 %[text] How do these compare to the simulation numbers:
 
 %[appendix]{"version":"1.0"}
