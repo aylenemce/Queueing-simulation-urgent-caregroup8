@@ -22,12 +22,12 @@ LogInterval = 1;
 %%
 %[text] ## Numbers from theory for M/M/1 queue
 %[text] Compute `P(1+n)` = $P\_n$ = probability of finding the system in state $n$ in the long term. Note that this calculation assumes $s=1$.
-P0 = 1/hypergeom([1], [mu/theta], lambda/theta);
-P = zeros([nMax+1, 1]);
+P0 = 1/hypergeom(1, mu/theta, lambda/theta);
+P = zeros([nMax + 1, 1]);
 P(1) = P0;
 
 for j = 1:nMax
-    P(j+1) = P(j) * (lambda / (mu + (j-1)*theta));
+    P(j + 1) = P(j) * (lambda / (mu + (j - 1) * theta));
 end
 
 pi_s = (mu * (1 - P0)) / lambda;
@@ -36,23 +36,27 @@ fprintf('P0 to P5: %s\n', mat2str(P, 4));
 fprintf('Fraction served (pi_s): %.4f\n', pi_s);
 
 
-P0 = 1/hypergeom([1], [mu/theta], lambda/theta);
+P0 = 1/hypergeom(1, mu/theta, lambda/theta);
 
 nMax = 5;
-P = zeros([nMax+1, 1]);
+P = zeros([nMax + 1, 1]);
 P(1) = P0;
 
 for j = 1:nMax
-    P(j+1) = P(j) * (lambda / (mu + (j-1)*theta));
+    P(j + 1) = P(j) * (lambda / (mu + (j - 1) * theta));
 end
-%%
-% calculating 2.1
 
-fprintf('P(%d) = %.6f\n', n, P(n+1));
-L_theory  = rho / (1 - rho);
-Lq_theory = rho^2 / (1 - rho);
-W_theory  = L_theory / lambda;
-Wq_theory = Lq_theory / lambda;
+%%
+%fprintf('P(%d) = %.6f\n', n, P(n+1));
+n_vals = 0:nMax;
+L_theory = sum(n_vals' .* P); 
+
+Lq_theory = sum(max(0, n_vals - s)' .* P);
+
+lambda_eff = lambda * pi_s; 
+W_theory = L_theory / lambda_eff;
+Wq_theory = Lq_theory / lambda_eff;
+
 theory = [L_theory, Lq_theory, W_theory, Wq_theory];
 %%
 %[text] ## Run simulation samples
@@ -249,7 +253,7 @@ t = tiledlayout(fig,1,1);
 ax = nexttile(t);
 %[text] This time, the data is a list of real numbers, not integers.  The option `BinWidth=...` means to use bins of a particular width, and choose the left-most and right-most edges automatically.  Instead, you could specify the left-most and right-most edges explicitly.  For instance, using `BinEdges=0:0.5:60` means to use bins $(0, 0.5), (0.5, 1.0), \\dots$
 h = histogram(ax, TimeInSystem, Normalization="probability", BinWidth=5/60);
-%[text] Add titles and labels and such.
+%[text] `Add titles and labels and such.`
 tvals = linspace(0, max(TimeInSystem), 300);
 fw = (mu - lambda) * exp(-(mu - lambda) * tvals);
 plot(ax, tvals, fw * (5/60), 'r', 'LineWidth', 2);
@@ -259,7 +263,7 @@ ylabel(ax, "Probability");
 %[text] Set ranges on the axes.
 %ylim(ax, [0, 0.2]);
 %xlim(ax, [0, 2.0]);
-%[text] Wait for MATLAB to catch up.
+%[text] `Wait for MATLAB to catch up.`
 pause(2);
 %[text] Save the picture.
 exportgraphics(fig, PictureFolder + filesep + "Time in system histogram.pdf");
@@ -357,7 +361,7 @@ exportgraphics(fig, PictureFolder + filesep + "ServiceTime_histogram.pdf");
 %[text] $P\_0$ = $(1-p)\*p^n$ 
 %[text] for $n = 0:$ $(1-p)\*p^0=(1-\\frac{2}{3})\*\\frac{2}{3}^0=\\frac{1}{3}\*1=\\frac{1}{3}=0.3333$
 %[text] for $n = 1$: $(1-p)\*p^1=\\frac{1}{3}\*\\frac{2}{3}^1=\\frac{2}{9}=0.2222$
-%[text] *for* $n = 2$: $(1-p)\*p^2=\\frac{1}{3}\*\\frac{2}{3}^2=\\frac{4}{27}=0.148$
+%[text] for $n = 2$: $(1-p)\*p^2=\\frac{1}{3}\*\\frac{2}{3}^2=\\frac{4}{27}=0.148$
 %[text] for $n=3$: $(1-p)\*p^3=\\frac{1}{3}\*\\frac{2}{3}^3=\\frac{8}{81}=0.0987$
 %[text] for $n=4$: $(1-p)\*p^4=\\frac{1}{3}\*\\frac{2}{3}^4=\\frac{16}{243}=0.0658$
 %[text] for $n=5$: $(1-p)\*p^5=\\frac{1}{3}\*\\frac{2}{3}^5=\\frac{32}{729}=0.0438$ 
