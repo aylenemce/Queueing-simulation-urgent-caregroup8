@@ -22,12 +22,12 @@ LogInterval = 1;
 %%
 %[text] ## Numbers from theory for M/M/1 queue
 %[text] Compute `P(1+n)` = $P\_n$ = probability of finding the system in state $n$ in the long term. Note that this calculation assumes $s=1$.
-P0 = 1/hypergeom([1], [mu/theta], lambda/theta);
-P = zeros([nMax+1, 1]);
+P0 = 1/hypergeom(1, mu/theta, lambda/theta);
+P = zeros([nMax + 1, 1]);
 P(1) = P0;
 
 for j = 1:nMax
-    P(j+1) = P(j) * (lambda / (mu + (j-1)*theta));
+    P(j + 1) = P(j) * (lambda / (mu + (j - 1) * theta));
 end
 
 pi_s = (mu * (1 - P0)) / lambda;
@@ -36,23 +36,27 @@ fprintf('P0 to P5: %s\n', mat2str(P, 4));
 fprintf('Fraction served (pi_s): %.4f\n', pi_s);
 
 
-P0 = 1/hypergeom([1], [mu/theta], lambda/theta);
+P0 = 1/hypergeom(1, mu/theta, lambda/theta);
 
 nMax = 5;
-P = zeros([nMax+1, 1]);
+P = zeros([nMax + 1, 1]);
 P(1) = P0;
 
 for j = 1:nMax
-    P(j+1) = P(j) * (lambda / (mu + (j-1)*theta));
+    P(j + 1) = P(j) * (lambda / (mu + (j - 1) * theta));
 end
-%%
-% calculating 2.1
 
-fprintf('P(%d) = %.6f\n', n, P(n+1)); %[output:623a96ab]
-L_theory  = rho / (1 - rho);
-Lq_theory = rho^2 / (1 - rho);
-W_theory  = L_theory / lambda;
-Wq_theory = Lq_theory / lambda;
+%%
+%fprintf('P(%d) = %.6f\n', n, P(n+1)); %[output:623a96ab]
+n_vals = 0:nMax;
+L_theory = sum(n_vals' .* P); 
+
+Lq_theory = sum(max(0, n_vals - s)' .* P);
+
+lambda_eff = lambda * pi_s; 
+W_theory = L_theory / lambda_eff;
+Wq_theory = Lq_theory / lambda_eff;
+
 theory = [L_theory, Lq_theory, W_theory, Wq_theory];
 %%
 %[text] ## Run simulation samples
