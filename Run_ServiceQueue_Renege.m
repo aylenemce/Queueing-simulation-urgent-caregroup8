@@ -1,7 +1,7 @@
 %[text] # Run samples of the ServiceQueue simulation: Group Eight
 %[text] Collect statistics and plot histograms along the way.
 PictureFolder = "Pictures";
-mkdir(PictureFolder); %[output:27e3f89a]
+mkdir(PictureFolder);
 %%
 %[text] ## Set up
 %[text] `We'll measure time in hours`
@@ -22,12 +22,27 @@ LogInterval = 1;
 %%
 %[text] ## Numbers from theory for M/M/1 queue
 %[text] Compute `P(1+n)` = $P\_n$ = probability of finding the system in state $n$ in the long term. Note that this calculation assumes $s=1$.
-rho = lambda / mu;
 P0 = 1/hypergeom([1], [mu/theta], lambda/theta);
-nMax = 10;
-P = zeros([NMax+1, 1]); %[output:2e268b8d]
+P = zeros([nMax+1, 1]);
 P(1) = P0;
-for j = 1:NMax
+
+for j = 1:nMax
+    P(j+1) = P(j) * (lambda / (mu + (j-1)*theta));
+end
+
+pi_s = (mu * (1 - P0)) / lambda;
+
+fprintf('P0 to P5: %s\n', mat2str(P, 4));
+fprintf('Fraction served (pi_s): %.4f\n', pi_s);
+
+
+P0 = 1/hypergeom([1], [mu/theta], lambda/theta);
+
+nMax = 5;
+P = zeros([nMax+1, 1]);
+P(1) = P0;
+
+for j = 1:nMax
     P(j+1) = P(j) * (lambda / (mu + (j-1)*theta));
 end
 %%
@@ -342,7 +357,7 @@ exportgraphics(fig, PictureFolder + filesep + "ServiceTime_histogram.pdf");
 %[text] $P\_0$ = $(1-p)\*p^n$ 
 %[text] for $n = 0:$ $(1-p)\*p^0=(1-\\frac{2}{3})\*\\frac{2}{3}^0=\\frac{1}{3}\*1=\\frac{1}{3}=0.3333$
 %[text] for $n = 1$: $(1-p)\*p^1=\\frac{1}{3}\*\\frac{2}{3}^1=\\frac{2}{9}=0.2222$
-%[text] for $n = 2$: $(1-p)\*p^2=\\frac{1}{3}\*\\frac{2}{3}^2=\\frac{4}{27}=0.148$
+%[text] *for* $n = 2$: $(1-p)\*p^2=\\frac{1}{3}\*\\frac{2}{3}^2=\\frac{4}{27}=0.148$
 %[text] for $n=3$: $(1-p)\*p^3=\\frac{1}{3}\*\\frac{2}{3}^3=\\frac{8}{81}=0.0987$
 %[text] for $n=4$: $(1-p)\*p^4=\\frac{1}{3}\*\\frac{2}{3}^4=\\frac{16}{243}=0.0658$
 %[text] for $n=5$: $(1-p)\*p^5=\\frac{1}{3}\*\\frac{2}{3}^5=\\frac{32}{729}=0.0438$ 
@@ -359,10 +374,4 @@ exportgraphics(fig, PictureFolder + filesep + "ServiceTime_histogram.pdf");
 %---
 %[metadata:view]
 %   data: {"layout":"inline","rightPanelPercent":34.1}
-%---
-%[output:27e3f89a]
-%   data: {"dataType":"warning","outputData":{"text":"Warning: Directory already exists."}}
-%---
-%[output:2e268b8d]
-%   data: {"dataType":"error","outputData":{"errorType":"runtime","text":"Unrecognized function or variable 'NMax'."}}
 %---
