@@ -23,10 +23,10 @@ LogInterval = 1;
 %[text] ## Numbers from theory for M/M/1 queue
 %[text] Compute `P(1+n)` = $P\_n$ = probability of finding the system in state $n$ in the long term. Note that this calculation assumes $s=1$.
 P0 = 1/hypergeom([1], [mu/theta], lambda/theta);
-P = zeros([NMax+1, 1]);
+P = zeros([nMax+1, 1]);
 P(1) = P0;
 
-for j = 1:NMax
+for j = 1:nMax
     P(j+1) = P(j) * (lambda / (mu + (j-1)*theta));
 end
 
@@ -38,11 +38,11 @@ fprintf('Fraction served (pi_s): %.4f\n', pi_s);
 
 P0 = 1/hypergeom([1], [mu/theta], lambda/theta);
 
-NMax = 5;
-P = zeros([NMax+1, 1]);
+nMax = 5;
+P = zeros([nMax+1, 1]);
 P(1) = P0;
 
-for j = 1:NMax
+for j = 1:nMax
     P(j+1) = P(j) * (lambda / (mu + (j-1)*theta));
 end
 %%
