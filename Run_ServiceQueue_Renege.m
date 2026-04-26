@@ -368,8 +368,11 @@ title('Number of Reneged Customers per Run');
 xlabel('Counts');
 ylabel('Probability');
 %%
+clear classes %[output:1bbb72b7] %[output:7a1b680f] %[output:1c3f0cab] %[output:8495578b] %[output:0fd86c1c] %[output:7073dab7] %[output:1d9af352] %[output:462731a7]
+rehash toolboxcache
+dbstop if error
 
-
+q = ServiceQueue;
 %%
 %[text] Average Value Estimates: 
 %[text] $lambda$ = $2$
@@ -407,5 +410,29 @@ ylabel('Probability');
 %   data: {"dataType":"text","outputData":{"text":"Fraction served (pi_s): 0.7092\n","truncated":false}}
 %---
 %[output:713fd0e1]
-%   data: {"dataType":"error","outputData":{"errorType":"runtime","text":"Error using <a href=\"matlab:matlab.lang.internal.introspective.errorDocCallback('ServiceQueueRenege')\" style=\"font-weight:bold\">ServiceQueueRenege<\/a>\nThe class 'ServiceQueue' contains a parse error, cannot be found on MATLAB's search path, or is shadowed by another file with the same name."}}
+%   data: {"dataType":"error","outputData":{"errorType":"runtime","text":"Error using <a href=\"matlab:matlab.lang.internal.introspective.errorDocCallback('ServiceQueueRenege')\" style=\"font-weight:bold\">ServiceQueueRenege<\/a>\nThe specified superclass 'ServiceQueue' contains a parse error, cannot be found on MATLAB's search path, or is shadowed by another file with the same name."}}
+%---
+%[output:1bbb72b7]
+%   data: {"dataType":"warning","outputData":{"text":"Warning: Objects of 'onCleanup' class exist.  Cannot clear this class or any of its superclasses."}}
+%---
+%[output:7a1b680f]
+%   data: {"dataType":"warning","outputData":{"text":"Warning: Objects of 'onCleanup' class exist.  Cannot clear this class or any of its superclasses."}}
+%---
+%[output:1c3f0cab]
+%   data: {"dataType":"warning","outputData":{"text":"Warning: Objects of 'onCleanup' class exist.  Cannot clear this class or any of its superclasses."}}
+%---
+%[output:8495578b]
+%   data: {"dataType":"warning","outputData":{"text":"Warning: Objects of 'onCleanup' class exist.  Cannot clear this class or any of its superclasses."}}
+%---
+%[output:0fd86c1c]
+%   data: {"dataType":"warning","outputData":{"text":"Warning: Objects of 'onCleanup' class exist.  Cannot clear this class or any of its superclasses."}}
+%---
+%[output:7073dab7]
+%   data: {"dataType":"warning","outputData":{"text":"Warning: Objects of 'onCleanup' class exist.  Cannot clear this class or any of its superclasses."}}
+%---
+%[output:1d9af352]
+%   data: {"dataType":"warning","outputData":{"text":"Warning: Objects of 'onCleanup' class exist.  Cannot clear this class or any of its superclasses."}}
+%---
+%[output:462731a7]
+%   data: {"dataType":"warning","outputData":{"text":"Warning: Objects of 'onCleanup' class exist.  Cannot clear this class or any of its superclasses."}}
 %---
