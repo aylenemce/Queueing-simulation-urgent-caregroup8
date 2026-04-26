@@ -20,7 +20,7 @@ MaxTime = 5;
 %[text] Make a log entry every so often.
 LogInterval = 1;
 %%
-%[text] ## Numbers from theory for M/M/1 queue
+%[text] ## Numbers from theory for M/M/1+M queue
 %[text] Compute `P(1+n)` = $P\_n$ = probability of finding the system in state $n$ in the long term. Note that this calculation assumes $s=1$.
 % Solving 3.1 and 3.2
 P0 = 1/hypergeom(1, mu/theta, lambda/theta);
