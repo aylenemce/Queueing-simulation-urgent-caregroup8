@@ -316,7 +316,7 @@ classdef ServiceQueueRenege < ServiceQueue
                     obj.Reneged{end+1} = reneging_customer;
                     obj.Waiting(i) = []; % Remove them from the line
                     
-                    obj.record_log(); % Update the log
+           
                     break;
                 end
             end
