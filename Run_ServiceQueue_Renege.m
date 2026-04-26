@@ -1,7 +1,7 @@
 %[text] # Run samples of the ServiceQueue simulation: Group Eight
 %[text] Collect statistics and plot histograms along the way.
 PictureFolder = "Pictures";
-mkdir(PictureFolder); %[output:6382b0a3]
+mkdir(PictureFolder);
 %%
 %[text] ## Set up
 %[text] `We'll measure time in hours`
@@ -23,7 +23,7 @@ LogInterval = 1;
 %[text] ## Numbers from theory for M/M/1 queue
 %[text] Compute `P(1+n)` = $P\_n$ = probability of finding the system in state $n$ in the long term. Note that this calculation assumes $s=1$.
 % Solving 3.1 and 3.2
-P0 = 1/hypergeom(1, mu/theta, lambda/theta); %[output:788ccf32]
+P0 = 1/hypergeom(1, mu/theta, lambda/theta);
 nMax = 5;
 P = zeros([nMax + 1, 1]);
 P(1) = P0;
@@ -155,7 +155,7 @@ legend(ax, "simulation", "theory");
 %[text] Set ranges on the axes. MATLAB's plotting functions do this automatically, but when you need to compare two sets of data, it's a good idea to use the same ranges on the two pictures.  To start, you can let MATLAB choose the ranges automatically, and just know that it might choose very different ranges for different sets of data.  Once you're certain the picture content is correct, choose an x range and a y range that gives good results for all sets of data.  The final choice of ranges is a matter of some trial and error.  You generally have to do these commands *after* calling `plot` and `histogram`.
 %[text] This sets the vertical axis to go from $0$ to $0.2$.
 %ylim(ax, [0, 0.2]);
-%[text] This sets the horizontal axis to go from $-1$ to $21$.  The histogram will use bins $(-0.5, 0.5), (0.5, 1.5), \\dots$ so this leaves some visual breathing room on the left.
+%[text] This sets the horizontal axis to go from $-1$ *to* $21$*.  The histogram will use bins* $(-0.5, 0.5), (0.5, 1.5), \\dots$ so this leaves some visual breathing room on the left.
 xlim(ax, [0, nMax]);
 %[text] MATLAB-ism: You have to wait a couple of seconds for those settings to take effect or `exportgraphics` will screw up the margins.
 pause(2);
@@ -381,10 +381,4 @@ exportgraphics(fig, PictureFolder + filesep + "ServiceTime_histogram.pdf");
 %---
 %[metadata:view]
 %   data: {"layout":"inline","rightPanelPercent":34.1}
-%---
-%[output:6382b0a3]
-%   data: {"dataType":"warning","outputData":{"text":"Warning: Directory already exists."}}
-%---
-%[output:788ccf32]
-%   data: {"dataType":"error","outputData":{"errorType":"runtime","text":"hypergeom requires <a href=\"matlab:matlab.internal.addons.launchers.showExplorer('ErrorRecovery', 'identifier', 'SM', 'focused', 'hypergeom');\">Symbolic Math Toolbox<\/a>."}}
 %---
