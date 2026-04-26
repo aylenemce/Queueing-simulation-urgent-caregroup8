@@ -33,7 +33,7 @@ classdef ServiceQueueRenege < ServiceQueue
 
     properties (SetAccess = private)
         % Time - Current time.
-        Time = 0;
+        %Time = 0;
 
         % InterArrivalDist - Distribution object that is sampled when one
         % customer arrives to determine the time until the next customer
@@ -43,48 +43,48 @@ classdef ServiceQueueRenege < ServiceQueue
         % ServiceDist - Distribution object that is sampled when a serving
         % station begins serving a customer.  The resulting random number
         % is the time until service is complete.
-        ServiceDist;
+        %ServiceDist;
 
         % ServerAvailable - Row vector of boolean values, initial all true.
         % ServerAvailable(j) is set to false when serving station j begins
         % serving a customer, and is set to true when that service is
         % complete.
-        ServerAvailable;
+        %ServerAvailable;
 
         % Servers - Cell array row vector.  Entries are initially empty.
         % When service station j begins serving a Customer, the Customer
         % object is stored in Servers{j}.
-        Servers;
+        %Servers;
 
         % Events - PriorityQueue object that holds all active Event objects
         % of all types.  All events have a Time property that specifies
         % when they occur. The next event is the one with the least Time,
         % and can be popped from Events.
-        Events;
+        %Events;
 
         % Waiting - Cell array row vector of Customer objects. Initially
         % empty.  All arriving Customers are placed at the end of this
         % vector.  When a serving station is available, the first Customer
         % is removed from Waiting and moved to the corresponding slot in
         % Servers.
-        Waiting = {};
+        %Waiting = {};
 
         % Served - Cell array row vector of Customer objects. Initially
         % empty.  When a Customer's service is complete, the Customer
         % object is moved from its slot in Servers to the end of Served.
-        Served = {};
+        %Served = {};
 
         % Log - Table of log entries. Its columns are:
         % * Time - Time of the log entry
         % * NumWaiting - How many customers are currently waiting
         % * NumInService - How many are currently being served
         % * NumServed -  How many have been served
-        Log = table(Size=[0, 5], ...
-            VariableNames={'Time','NumWaiting','NumInService','NumServed','NumReneged'}, ...
-            VariableTypes={'double','int64','int64','int64','int64'});
+        %Log = table(Size=[0, 5], ...
+            %VariableNames={'Time','NumWaiting','NumInService','NumServed','NumReneged'}, ...
+            %VariableTypes={'double','int64','int64','int64','int64'};
         % Add the distribution and the list of people who leave
-        %RenegeDist;
-        %Reneged = {};
+        RenegeDist;
+        Reneged = {};
     
     end
 
