@@ -22,7 +22,9 @@ LogInterval = 1;
 %%
 %[text] ## Numbers from theory for M/M/1 queue
 %[text] Compute `P(1+n)` = $P\_n$ = probability of finding the system in state $n$ in the long term. Note that this calculation assumes $s=1$.
+% Solving 3.1 and 3.2
 P0 = 1/hypergeom(1, mu/theta, lambda/theta);
+nMax = 5;
 P = zeros([nMax + 1, 1]);
 P(1) = P0;
 
@@ -30,6 +32,7 @@ for j = 1:nMax
     P(j + 1) = P(j) * (lambda / (mu + (j - 1) * theta));
 end
 
+% Solving 3.2.2
 pi_s = (mu * (1 - P0)) / lambda;
 
 fprintf('P0 to P5: %s\n', mat2str(P, 4));
@@ -143,7 +146,7 @@ hold(ax, "on");
 %[text] Start with a histogram.  The result is an empirical PDF, that is, the area of the bar at horizontal index n is proportional to the fraction of samples for which there were n customers in the system.  The data for this histogram is counts of customers, which must all be whole numbers.  The option `BinMethod="integers"` means to use bins $(-0.5, 0.5), (0.5, 1.5), \\dots$ so that the height of the first bar is proportional to the count of 0s in the data, the height of the second bar is proportional to the count of 1s, etc. MATLAB can choose bins automatically, but since we know the data consists of whole numbers, it makes sense to specify this option so we get consistent results.
 h = histogram(ax, NumInSystem, Normalization="probability", BinMethod="integers");
 %[text] Plot $(0, P\_0), (1, P\_1), \\dots$.  If all goes well, these dots should land close to the tops of the bars of the histogram.
-plot(ax, 0:nMax, P, 'o', MarkerEdgeColor='k', MarkerFaceColor='r');
+plot(ax, 0:nMax, P, 'ro', 'MarkerSize', 10, 'DisplayName', 'Theory (Reneging)');
 %[text] Add titles and labels and such.
 title(ax, "Number of customers in the system");
 xlabel(ax, "Count");
@@ -152,8 +155,8 @@ legend(ax, "simulation", "theory");
 %[text] Set ranges on the axes. MATLAB's plotting functions do this automatically, but when you need to compare two sets of data, it's a good idea to use the same ranges on the two pictures.  To start, you can let MATLAB choose the ranges automatically, and just know that it might choose very different ranges for different sets of data.  Once you're certain the picture content is correct, choose an x range and a y range that gives good results for all sets of data.  The final choice of ranges is a matter of some trial and error.  You generally have to do these commands *after* calling `plot` and `histogram`.
 %[text] This sets the vertical axis to go from $0$ to $0.2$.
 %ylim(ax, [0, 0.2]);
-%[text] This sets the horizontal axis to go from $-1$ to $21$.  The histogram will use bins $(-0.5, 0.5), (0.5, 1.5), \\dots$ so this leaves some visual breathing room on the left.
-%xlim(ax, [-1, 21]);
+%[text] This sets the horizontal axis to go from $-1$ *to* $21$*.  The histogram will use bins* $(-0.5, 0.5), (0.5, 1.5), \\dots$ so this leaves some visual breathing room on the left.
+xlim(ax, [0, nMax]);
 %[text] MATLAB-ism: You have to wait a couple of seconds for those settings to take effect or `exportgraphics` will screw up the margins.
 pause(2);
 %[text] Save the picture.
@@ -167,7 +170,7 @@ t = tiledlayout(fig,1,1);
 ax = nexttile(t);
 h = histogram(ax, NumInWaiting, Normalization="probability", BinMethod="integers");
 hold(ax, "on");
-plot(ax, 0:nMax, P, 'o', MarkerEdgeColor='k', MarkerFaceColor='r');
+plot(ax, 0:nMax, P, 'ro', 'MarkerSize', 10);
 title(ax, "Number of customers waiting");
 xlabel(ax, "Count");
 ylabel(ax, "Probability");
@@ -253,17 +256,17 @@ t = tiledlayout(fig,1,1);
 ax = nexttile(t);
 %[text] This time, the data is a list of real numbers, not integers.  The option `BinWidth=...` means to use bins of a particular width, and choose the left-most and right-most edges automatically.  Instead, you could specify the left-most and right-most edges explicitly.  For instance, using `BinEdges=0:0.5:60` means to use bins $(0, 0.5), (0.5, 1.0), \\dots$
 h = histogram(ax, TimeInSystem, Normalization="probability", BinWidth=5/60);
-%[text] `Add titles and labels and such.`
+%[text] Add titles and labels and such.
 tvals = linspace(0, max(TimeInSystem), 300);
-fw = (mu - lambda) * exp(-(mu - lambda) * tvals);
+%fw = (mu - lambda) * exp(-(mu - lambda) * tvals);
 plot(ax, tvals, fw * (5/60), 'r', 'LineWidth', 2);
 title(ax, "Time in the system");
 xlabel(ax, "Time");
 ylabel(ax, "Probability");
 %[text] Set ranges on the axes.
 %ylim(ax, [0, 0.2]);
-%xlim(ax, [0, 2.0]);
-%[text] `Wait for MATLAB to catch up.`
+xlim(ax, [0, nMax]);
+%[text] Wait for MATLAB to catch up.
 pause(2);
 %[text] Save the picture.
 exportgraphics(fig, PictureFolder + filesep + "Time in system histogram.pdf");
@@ -277,8 +280,8 @@ TimeWaiting = WaitingInSystemSamples;
 h = histogram(ax, TimeWaiting, Normalization = "probability", BinWidth = 5/60);
 rho = lambda / mu;
 tvals = linspace(0, max(TimeWaiting), 300);
-fWq = rho * (mu - lambda) * exp(-(mu - lambda) * tvals);
-plot(ax, tvals, fWq * (5/60), 'r', 'LineWidth', 2);
+%fWq = rho * (mu - lambda) * exp(-(mu - lambda) * tvals);
+%plot(ax, tvals, fWq * (5/60), 'r', 'LineWidth', 2);
 title(ax, "Waiting time in queue");
 xlabel(ax, "Time (hours)");
 ylabel(ax, "Probability");
