@@ -1,7 +1,7 @@
 %[text] # Run samples of the ServiceQueue simulation: Group Eight
 %[text] Collect statistics and plot histograms along the way.
 PictureFolder = "Pictures";
-mkdir(PictureFolder);
+mkdir(PictureFolder); %[output:5e1d70bc]
 %%
 %[text] ## Set up
 %[text] `We'll measure time in hours`
@@ -31,7 +31,7 @@ end
 %%
 % calculating 2.1
 
-fprintf('P(%d) = %.6f\n', n, P(n+1));
+fprintf('P(%d) = %.6f\n', n, P(n+1)); %[output:255db849]
 L_theory  = rho / (1 - rho);
 Lq_theory = rho^2 / (1 - rho);
 W_theory  = L_theory / lambda;
@@ -45,9 +45,9 @@ rng("default");
 %[text] We'll store our queue simulation objects in this list.
 QSamples = cell([NumSamples, 1]);
 %[text] `The statistics come out weird if the log interval is too short, because the log entries are not independent enough.  So the log interval should be long enough for several arrival and departure events happen.`
-for SampleNum = 1:NumSamples
+for SampleNum = 1:NumSamples %[output:group:1b533d37]
     if mod(SampleNum, 10) == 0
-        fprintf("%d ", SampleNum);
+        fprintf("%d ", SampleNum); %[output:48b62d9c]
     end
     if mod(SampleNum, 100) == 0
         fprintf("\n");
@@ -60,7 +60,7 @@ for SampleNum = 1:NumSamples
     q.schedule_event(Arrival(random(q.InterArrivalDist), Customer(1)));
     run_until(q, MaxTime);
     QSamples{SampleNum} = q;
-end
+end %[output:group:1b533d37]
 %%
 %[text] ## Collect measurements of how many customers are in the system
 %[text] Count how many customers are in the system at each log entry for each sample run.  There are two ways to do this.  You only have to do one of them.
@@ -89,12 +89,12 @@ end
 % L Simulated
 NumInSystem = vertcat(NumInSystemSamples{:});
 meanNumInSystemSamples = mean(NumInSystem);
-fprintf("Mean number in system: %f\n", meanNumInSystemSamples);
+fprintf("Mean number in system: %f\n", meanNumInSystemSamples); %[output:940364c3]
 
 % L_q Simulated
 NumInWaiting = vertcat(NumInWaitingSamples{:});
 meanNumInWaitingSamples = mean(NumInWaiting);
-fprintf("Mean number waiting in system: %f\n", meanNumInWaitingSamples);
+fprintf("Mean number waiting in system: %f\n", meanNumInWaitingSamples); %[output:42f87b92]
 %[text] ### Option two: Map a function over the cell array of ServiceQueue objects.
 %[text] The `@(q) ...` expression is shorthand for a function that takes a ServiceQueue as input, names it `q`, and computes the sum of two columns from its log.  The `cellfun` function applies that function to each item in `QSamples`. The option `UniformOutput=false` tells `cellfun` to produce a cell array rather than a numerical array.
 %NumInSystemSamples = cellfun( ...
@@ -114,20 +114,20 @@ NumInSystem = vertcat(NumInSystemSamples{:});
 meanNumInSystem = mean(NumInSystem);
 %fprintf("Mean number in system: %f\n", meanNumInSystem);
 %[text] Make a figure with one set of axes.
-fig = figure();
-t = tiledlayout(fig,1,1);
-ax = nexttile(t);
+fig = figure(); %[output:7e86bdd4]
+t = tiledlayout(fig,1,1); %[output:7e86bdd4]
+ax = nexttile(t); %[output:7e86bdd4]
 %[text] MATLAB-ism: Once you've created a picture, you can use `hold` to cause further plotting functions to work with the same picture rather than create a new one.
-hold(ax, "on");
+hold(ax, "on"); %[output:7e86bdd4]
 %[text] Start with a histogram.  The result is an empirical PDF, that is, the area of the bar at horizontal index n is proportional to the fraction of samples for which there were n customers in the system.  The data for this histogram is counts of customers, which must all be whole numbers.  The option `BinMethod="integers"` means to use bins $(-0.5, 0.5), (0.5, 1.5), \\dots$ so that the height of the first bar is proportional to the count of 0s in the data, the height of the second bar is proportional to the count of 1s, etc. MATLAB can choose bins automatically, but since we know the data consists of whole numbers, it makes sense to specify this option so we get consistent results.
-h = histogram(ax, NumInSystem, Normalization="probability", BinMethod="integers");
+h = histogram(ax, NumInSystem, Normalization="probability", BinMethod="integers"); %[output:7e86bdd4]
 %[text] Plot $(0, P\_0), (1, P\_1), \\dots$.  If all goes well, these dots should land close to the tops of the bars of the histogram.
-plot(ax, 0:nMax, P, 'o', MarkerEdgeColor='k', MarkerFaceColor='r');
+plot(ax, 0:nMax, P, 'o', MarkerEdgeColor='k', MarkerFaceColor='r'); %[output:7e86bdd4]
 %[text] Add titles and labels and such.
-title(ax, "Number of customers in the system");
-xlabel(ax, "Count");
-ylabel(ax, "Probability");
-legend(ax, "simulation", "theory");
+title(ax, "Number of customers in the system"); %[output:7e86bdd4]
+xlabel(ax, "Count"); %[output:7e86bdd4]
+ylabel(ax, "Probability"); %[output:7e86bdd4]
+legend(ax, "simulation", "theory"); %[output:7e86bdd4]
 %[text] Set ranges on the axes. MATLAB's plotting functions do this automatically, but when you need to compare two sets of data, it's a good idea to use the same ranges on the two pictures.  To start, you can let MATLAB choose the ranges automatically, and just know that it might choose very different ranges for different sets of data.  Once you're certain the picture content is correct, choose an x range and a y range that gives good results for all sets of data.  The final choice of ranges is a matter of some trial and error.  You generally have to do these commands *after* calling `plot` *and* `histogram``.`
 %[text] This sets the vertical axis to go from $0$ to $0.2$.
 %ylim(ax, [0, 0.2]);
@@ -136,22 +136,22 @@ legend(ax, "simulation", "theory");
 %[text] MATLAB-ism: You have to wait a couple of seconds for those settings to take effect or `exportgraphics` will screw up the margins.
 pause(2);
 %[text] Save the picture.
-exportgraphics(fig, PictureFolder + filesep + "Number in system histogram.pdf");
-exportgraphics(fig, PictureFolder + filesep + "Number in system histogram.svg");
+exportgraphics(fig, PictureFolder + filesep + "Number in system histogram.pdf"); %[output:7e86bdd4]
+exportgraphics(fig, PictureFolder + filesep + "Number in system histogram.svg"); %[output:7e86bdd4]
 %fprintf("Mean number in system: %f\n", meanNumInSystem);
 
 % histogram for L_q
-fig = figure();
-t = tiledlayout(fig,1,1);
-ax = nexttile(t);
-h = histogram(ax, NumInWaiting, Normalization="probability", BinMethod="integers");
-hold(ax, "on");
-plot(ax, 0:nMax, P, 'o', MarkerEdgeColor='k', MarkerFaceColor='r');
-title(ax, "Number of customers waiting");
-xlabel(ax, "Count");
-ylabel(ax, "Probability");
+fig = figure(); %[output:3e0ac7e1]
+t = tiledlayout(fig,1,1); %[output:3e0ac7e1]
+ax = nexttile(t); %[output:3e0ac7e1]
+h = histogram(ax, NumInWaiting, Normalization="probability", BinMethod="integers"); %[output:3e0ac7e1]
+hold(ax, "on"); %[output:3e0ac7e1]
+plot(ax, 0:nMax, P, 'o', MarkerEdgeColor='k', MarkerFaceColor='r'); %[output:3e0ac7e1]
+title(ax, "Number of customers waiting"); %[output:3e0ac7e1]
+xlabel(ax, "Count"); %[output:3e0ac7e1]
+ylabel(ax, "Probability"); %[output:3e0ac7e1]
 pause(2);
-exportgraphics(fig, PictureFolder + filesep + "Lq_histogram.pdf");
+exportgraphics(fig, PictureFolder + filesep + "Lq_histogram.pdf"); %[output:3e0ac7e1]
 %[text] 
 %%
 %[text] ## Collect measurements of how long customers spend in the system
@@ -206,12 +206,12 @@ end
 % W Simulated
 TimeInSystemSamples = vertcat(TimeInSystemSamples{:});
 meanTimeInSystemSamples = mean(TimeInSystemSamples);
-fprintf("Mean time in system: %f\n", meanTimeInSystemSamples);
+fprintf("Mean time in system: %f\n", meanTimeInSystemSamples); %[output:36381899]
 
 % W_q Simulated
 WaitingInSystemSamples = vertcat(WaitingInSystemSamples{:});
 meanWaitingInSystemSamples = mean(WaitingInSystemSamples);
-fprintf("Mean waiting time in system: %f\n", meanWaitingInSystemSamples);
+fprintf("Mean waiting time in system: %f\n", meanWaitingInSystemSamples); %[output:224603eb]
 %[text] ### Option two: Use `cellfun` twice.
 %[text] The outer call to `cellfun` means do something to each `ServiceQueue` object in `QSamples`.  The "something" it does is to look at each customer in the `ServiceQueue` object's list q.Served and compute the time it spent in the system.
 %TimeInSystemSamples = cellfun( ...
@@ -223,114 +223,61 @@ fprintf("Mean waiting time in system: %f\n", meanWaitingInSystemSamples);
 %%
 %[text] ## Pictures and stats for time customers spend in the system
 %[text] `Print out mean time spent in the system.`
-meanTimeInSystem = mean(TimeInSystem);
+ meanTimeInSystem = mean(TimeInSystem);
 
 %fprintf("Mean time in system: %f\n", meanTimeInSystem);
 %[text] Make a figure with one set of axes.
-fig = figure();
-t = tiledlayout(fig,1,1);
-ax = nexttile(t);
+fig = figure(); %[output:25e83128]
+t = tiledlayout(fig,1,1); %[output:25e83128]
+ax = nexttile(t); %[output:25e83128]
 %[text] This time, the data is a list of real numbers, not integers.  The option `BinWidth=...` means to use bins of a particular width, and choose the left-most and right-most edges automatically.  Instead, you could specify the left-most and right-most edges explicitly.  For instance, using `BinEdges=0:0.5:60` means to use bins $(0, 0.5), (0.5, 1.0), \\dots$
-h = histogram(ax, TimeInSystem, Normalization="probability", BinWidth=5/60);
+h = histogram(ax, TimeInSystem, Normalization="probability", BinWidth=5/60); %[output:25e83128]
 %[text] Add titles and labels and such.
 tvals = linspace(0, max(TimeInSystem), 300);
 fw = (mu - lambda) * exp(-(mu - lambda) * tvals);
-plot(ax, tvals, fw * (5/60), 'r', 'LineWidth', 2);
-title(ax, "Time in the system");
-xlabel(ax, "Time");
-ylabel(ax, "Probability");
+plot(ax, tvals, fw * (5/60), 'r', 'LineWidth', 2); %[output:25e83128]
+title(ax, "Time in the system"); %[output:25e83128]
+xlabel(ax, "Time"); %[output:25e83128]
+ylabel(ax, "Probability"); %[output:25e83128]
 %[text] Set ranges on the axes.
 %ylim(ax, [0, 0.2]);
 %xlim(ax, [0, 2.0]);
 %[text] Wait for MATLAB to catch up.
 pause(2);
 %[text] Save the picture.
-exportgraphics(fig, PictureFolder + filesep + "Time in system histogram.pdf");
-exportgraphics(fig, PictureFolder + filesep + "Time in system histogram.svg");
+exportgraphics(fig, PictureFolder + filesep + "Time in system histogram.pdf"); %[output:25e83128]
+exportgraphics(fig, PictureFolder + filesep + "Time in system histogram.svg"); %[output:25e83128]
 
 % histogram for W_q
-fig = figure();
-t = tiledlayout(fig,1,1);
-ax = nexttile(t);
+fig = figure(); %[output:16e99757]
+t = tiledlayout(fig,1,1); %[output:16e99757]
+ax = nexttile(t); %[output:16e99757]
 TimeWaiting = WaitingInSystemSamples;
-h = histogram(ax, TimeWaiting, Normalization = "probability", BinWidth = 5/60);
+h = histogram(ax, TimeWaiting, Normalization = "probability", BinWidth = 5/60); %[output:16e99757]
 rho = lambda / mu;
 tvals = linspace(0, max(TimeWaiting), 300);
 fWq = rho * (mu - lambda) * exp(-(mu - lambda) * tvals);
-plot(ax, tvals, fWq * (5/60), 'r', 'LineWidth', 2);
-title(ax, "Waiting time in queue");
-xlabel(ax, "Time (hours)");
-ylabel(ax, "Probability");
+plot(ax, tvals, fWq * (5/60), 'r', 'LineWidth', 2); %[output:16e99757]
+title(ax, "Waiting time in queue"); %[output:16e99757]
+xlabel(ax, "Time (hours)"); %[output:16e99757]
+ylabel(ax, "Probability"); %[output:16e99757]
 pause(2);
-exportgraphics(fig, PictureFolder + filesep + "Wq_histogram.pdf");
+exportgraphics(fig, PictureFolder + filesep + "Wq_histogram.pdf"); %[output:16e99757]
 ServiceTimes = cellfun(@(q) cellfun(@(c) c.DepartureTime - c.BeginServiceTime, q.Served'), QSamples, UniformOutput=false);
 ServiceTimes = vertcat(ServiceTimes{:});
 CustomersServed = cellfun(@(q) length(q.Served), QSamples);
 %histogram for service times
-fig = figure();
-t = tiledlayout(fig,1,1);
-ax = nexttile(t);
-h = histogram(ax, ServiceTimes, Normalization = "probability", BinWidth = 5/60);
-title(ax, "Service Time Distribution");
-xlabel(ax, "Time (hours)");
-ylabel(ax, "Probability");
+fig = figure(); %[output:745dee2b]
+t = tiledlayout(fig,1,1); %[output:745dee2b]
+ax = nexttile(t); %[output:745dee2b]
+h = histogram(ax, ServiceTimes, Normalization = "probability", BinWidth = 5/60); %[output:745dee2b]
+title(ax, "Service Time Distribution"); %[output:745dee2b]
+xlabel(ax, "Time (hours)"); %[output:745dee2b]
+ylabel(ax, "Probability"); %[output:745dee2b]
 pause(2);
-exportgraphics(fig, PictureFolder + filesep + "ServiceTime_histogram.pdf");
+exportgraphics(fig, PictureFolder + filesep + "ServiceTime_histogram.pdf"); %[output:745dee2b]
 %%
-%L_q (expected number of customers waiting)
-%fig = figure();
-%t = tiledlayout(fig,1,1);
-%ax = nexttile(t);
 
-%h = histogram(ax, Lq_sim, Normalization="probability", BinMethod="integers");
-%title(ax, "expected count waiting");
-%xlabel(ax, "Time");
-%ylabel(ax, "Probability");
-%[text] Set ranges on the axes.
-%ylim(ax, [0, 0.2]);
-%xlim(ax, [0, 2.0]);
-%[text] Wait for MATLAB to catch up.
-%pause(2);
-%[text] Save the picture.
-%exportgraphics(fig, PictureFolder + filesep + "Expected count waiting histogram.pdf");
-%exportgraphics(fig, PictureFolder + filesep + "Expected count waiting histogram.svg");
-%compute waiting time
-%TimeWaitingSamples = cellfun(...
-    %@(q) cellfun(@(c) c.BeginServiceTime - c.ArrivalTime, q.Served'), ...
-    %QSamples,...
-    %UniformOutput=false);
-%TimeWaiting = vertcat(TimeWaitingSamples{:});
-%meanTimeWaiting = mean(TimeWaiting);
-
-%compute Lq
-%Lq_theory = lambda * meanTimeWaiting;
-
-%final sim vector
-%theory = [L_sim, Lq_sim, W_sim, Wq_sim];
-
-%L_sim_emp  = meanNumInSystem;
-%W_sim_emp  = meanTimeInSystem;
-%Wq_sim_emp = meanTimeWaiting;
-%Lq_sim_emp = lambda * Wq_sim_emp;
-
-%sim = [L_sim_emp, Lq_sim_emp, W_sim_emp, Wq_sim_emp];
-
-% Safe percent discrepancy calculation
-%pct = nan(size(theory));                % preallocate
-%nonzero = theory ~= 0;                  % indices where theory nonzero
-%pct(nonzero) = 100 * abs(sim(nonzero) - theory(nonzero)) ./ abs(theory(nonzero));
-%pct(~nonzero)  = abs(sim(~nonzero) - theory(~nonzero)); % absolute diff when theory == 0
-
-% Display nicely
-%for k = 1:numel(theory)
-    %if theory(k) ~= 0
-        %fprintf('Stat %d: theory = %.4g, sim = %.4g, discrepancy = %.3f%%n', ...
-               % k, theory(k), sim(k), pct(k));
-   % else
-      %  fprintf('Stat %d: theory = 0, sim = %.4g, abs discrepancy = %.4g\n', ...
-              %  k, sim(k), pct(k));
-    %end
-%end
 %%
 %[text] Average Value Estimates: 
 %[text] $lambda$ = $2$
@@ -357,4 +304,40 @@ exportgraphics(fig, PictureFolder + filesep + "ServiceTime_histogram.pdf");
 %---
 %[metadata:view]
 %   data: {"layout":"inline","rightPanelPercent":34.1}
+%---
+%[output:5e1d70bc]
+%   data: {"dataType":"warning","outputData":{"text":"Warning: Directory already exists."}}
+%---
+%[output:255db849]
+%   data: {"dataType":"text","outputData":{"text":"P(10) = 0.005781\n","truncated":false}}
+%---
+%[output:48b62d9c]
+%   data: {"dataType":"text","outputData":{"text":"10 20 30 40 50 60 70 80 90 100 110 120 130 140 150 160 170 180 190 200 210 220 230 240 250 260 270 280 290 300 310 320 330 340 350 360 370 380 390 400 410 420 430 440 450 460 470 480 490 500 ","truncated":false}}
+%---
+%[output:940364c3]
+%   data: {"dataType":"text","outputData":{"text":"Mean number in system: 1.881563\n","truncated":false}}
+%---
+%[output:42f87b92]
+%   data: {"dataType":"text","outputData":{"text":"Mean number waiting in system: 1.225046\n","truncated":false}}
+%---
+%[output:7e86bdd4]
+%   data: {"dataType":"image","outputData":{"dataUri":"data:,","height":0,"width":0}}
+%---
+%[output:3e0ac7e1]
+%   data: {"dataType":"image","outputData":{"dataUri":"data:,","height":0,"width":0}}
+%---
+%[output:36381899]
+%   data: {"dataType":"text","outputData":{"text":"Mean time in system: 0.930638\n","truncated":false}}
+%---
+%[output:224603eb]
+%   data: {"dataType":"text","outputData":{"text":"Mean waiting time in system: 0.599511\n","truncated":false}}
+%---
+%[output:25e83128]
+%   data: {"dataType":"image","outputData":{"dataUri":"data:,","height":0,"width":0}}
+%---
+%[output:16e99757]
+%   data: {"dataType":"image","outputData":{"dataUri":"data:,","height":0,"width":0}}
+%---
+%[output:745dee2b]
+%   data: {"dataType":"image","outputData":{"dataUri":"data:,","height":0,"width":0}}
 %---
