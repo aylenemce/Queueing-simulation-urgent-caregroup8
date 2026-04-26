@@ -1,6 +1,6 @@
 classdef Renege < Event
     properties
-        CustomerId % Tracks which specific person is losing patience
+        CustomerId 
     end
     
     methods
@@ -10,7 +10,6 @@ classdef Renege < Event
         end
         
         function visit(obj, queue)
-            % This tells the queue to execute the renege logic
             queue.handle_renege(obj);
         end
     end
