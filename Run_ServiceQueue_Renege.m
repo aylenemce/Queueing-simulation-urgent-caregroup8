@@ -302,60 +302,7 @@ ylabel(ax, "Probability");
 pause(2);
 exportgraphics(fig, PictureFolder + filesep + "ServiceTime_histogram.pdf");
 %%
-%L_q (expected number of customers waiting)
-%fig = figure();
-%t = tiledlayout(fig,1,1);
-%ax = nexttile(t);
 
-%h = histogram(ax, Lq_sim, Normalization="probability", BinMethod="integers");
-%title(ax, "expected count waiting");
-%xlabel(ax, "Time");
-%ylabel(ax, "Probability");
-%[text] Set ranges on the axes.
-%ylim(ax, [0, 0.2]);
-%xlim(ax, [0, 2.0]);
-%[text] Wait for MATLAB to catch up.
-%pause(2);
-%[text] Save the picture.
-%exportgraphics(fig, PictureFolder + filesep + "Expected count waiting histogram.pdf");
-%exportgraphics(fig, PictureFolder + filesep + "Expected count waiting histogram.svg");
-%compute waiting time
-%TimeWaitingSamples = cellfun(...
-    %@(q) cellfun(@(c) c.BeginServiceTime - c.ArrivalTime, q.Served'), ...
-    %QSamples,...
-    %UniformOutput=false);
-%TimeWaiting = vertcat(TimeWaitingSamples{:});
-%meanTimeWaiting = mean(TimeWaiting);
-
-%compute Lq
-%Lq_theory = lambda * meanTimeWaiting;
-
-%final sim vector
-%theory = [L_sim, Lq_sim, W_sim, Wq_sim];
-
-%L_sim_emp  = meanNumInSystem;
-%W_sim_emp  = meanTimeInSystem;
-%Wq_sim_emp = meanTimeWaiting;
-%Lq_sim_emp = lambda * Wq_sim_emp;
-
-%sim = [L_sim_emp, Lq_sim_emp, W_sim_emp, Wq_sim_emp];
-
-% Safe percent discrepancy calculation
-%pct = nan(size(theory));                % preallocate
-%nonzero = theory ~= 0;                  % indices where theory nonzero
-%pct(nonzero) = 100 * abs(sim(nonzero) - theory(nonzero)) ./ abs(theory(nonzero));
-%pct(~nonzero)  = abs(sim(~nonzero) - theory(~nonzero)); % absolute diff when theory == 0
-
-% Display nicely
-%for k = 1:numel(theory)
-    %if theory(k) ~= 0
-        %fprintf('Stat %d: theory = %.4g, sim = %.4g, discrepancy = %.3f%%n', ...
-               % k, theory(k), sim(k), pct(k));
-   % else
-      %  fprintf('Stat %d: theory = 0, sim = %.4g, abs discrepancy = %.4g\n', ...
-              %  k, sim(k), pct(k));
-    %end
-%end
 %%
 %[text] Average Value Estimates: 
 %[text] $lambda$ = $2$
