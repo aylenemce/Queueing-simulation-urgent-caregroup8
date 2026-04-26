@@ -9,23 +9,23 @@ classdef ServiceQueueRenege < ServiceQueue
         % The inter-arrival time is exponentially distributed with a rate
         % parameter of ArrivalRate.
         % The default is 10 per hour (mean inter-arrival time of 6 minutes).
-        ArrivalRate = 10;
+        %ArrivalRate = 10;
 
         % DepartureRate - When a customer arrives, the time it takes for
         % them to be served is exponentially distributed with a rate
         % parameter of DepartureRate.
         % The default is 12 per hour (mean service time of 5 minutes).
-        DepartureRate = 12;
+        %DepartureRate = 12;
 
         % NumServers - How many identical serving stations are available.
-        NumServers = 1;
+        %NumServers = 1;
 
         % LogInterval - Approximately how many time units between log
         % entries.  Log events are scheduled so that when one log entry is
         % recorded, the next is scheduled for the current time plus this
         % interval.
         % The default is 1/60 of an hour (1 minute)
-        LogInterval = 1/60;
+        %LogInterval = 1/60;
         % Add the renege rate (theta)
         RenegeRate = 4;
     
@@ -38,7 +38,7 @@ classdef ServiceQueueRenege < ServiceQueue
         % InterArrivalDist - Distribution object that is sampled when one
         % customer arrives to determine the time until the next customer
         % arrives.
-        InterArrivalDist;
+        %InterArrivalDist;
 
         % ServiceDist - Distribution object that is sampled when a serving
         % station begins serving a customer.  The resulting random number
@@ -79,14 +79,12 @@ classdef ServiceQueueRenege < ServiceQueue
         % * NumWaiting - How many customers are currently waiting
         % * NumInService - How many are currently being served
         % * NumServed -  How many have been served
-        Log = table(Size=[0, 4], ...
-            VariableNames=...
-            {'Time', 'NumWaiting', 'NumInService', 'NumServed'}, ...
-            VariableTypes=...
-            {'double', 'int64', 'int64', 'int64'});
+        Log = table(Size=[0, 5], ...
+            VariableNames={'Time','NumWaiting','NumInService','NumServed','NumReneged'}, ...
+            VariableTypes={'double','int64','int64','int64','int64'});
         % Add the distribution and the list of people who leave
-        RenegeDist;
-        Reneged = {};
+        %RenegeDist;
+        %Reneged = {};
     
     end
 
