@@ -1,4 +1,4 @@
-classdef ServiceQueue < handle
+5classdef ServiceQueue < handle
     % ServiceQueue Simulation object that keeps track of customer arrivals,
     % departures, and service.
     % The default properties are for time measured in hours.
