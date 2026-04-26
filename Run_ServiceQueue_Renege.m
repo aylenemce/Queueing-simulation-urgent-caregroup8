@@ -1,7 +1,7 @@
-%[text] # Run samples of the ServiceQueue simulation: Group Eight
+%[text] # Run samples of the ServiceQueue\_Renege simulation: Group Eight
 %[text] Collect statistics and plot histograms along the way.
 PictureFolder = "Pictures";
-mkdir(PictureFolder); %[output:1bdba0a7]
+mkdir(PictureFolder);
 %%
 %[text] ## Set up
 %[text] `We'll measure time in hours`
@@ -16,9 +16,9 @@ theta = 4;
 %[text] Run many samples of the queue.
 NumSamples = 500;
 %[text] Each sample is run up to a maximum time.
-MaxTime = 20;
+MaxTime = 5;
 %[text] Make a log entry every so often.
-LogInterval = 0.25;
+LogInterval = 1;
 %%
 %[text] ## Numbers from theory for M/M/1+M queue
 %[text] Compute `P(1+n)` = $P\_n$ = probability of finding the system in state $n$ in the long term. Note that this calculation assumes $s=1$.
@@ -35,8 +35,8 @@ end
 % Solving 3.2.2
 pi_s = (mu * (1 - P0)) / lambda;
 
-fprintf('P0 to P5: %s\n', mat2str(P, 4)); %[output:3234095d]
-fprintf('Fraction served (pi_s): %.4f\n', pi_s); %[output:0a3674e8]
+fprintf('P0 to P5: %s\n', mat2str(P, 4));
+fprintf('Fraction served (pi_s): %.4f\n', pi_s);
 
 
 P0 = 1/hypergeom(1, mu/theta, lambda/theta);
@@ -69,22 +69,22 @@ rng("default");
 %[text] We'll store our queue simulation objects in this list.
 QSamples = cell([NumSamples, 1]);
 %[text] `The statistics come out weird if the log interval is too short, because the log entries are not independent enough.  So the log interval should be long enough for several arrival and departure events happen.`
-for SampleNum = 1:NumSamples %[output:group:88b6fa6e]
+for SampleNum = 1:NumSamples
     if mod(SampleNum, 10) == 0
         fprintf("%d ", SampleNum);
     end
     if mod(SampleNum, 100) == 0
         fprintf("\n");
     end
-    q = ServiceQueueRenege( ... %[output:713fd0e1]
-        ArrivalRate=lambda, ... %[output:713fd0e1]
-        DepartureRate=mu, ... %[output:713fd0e1]
-        NumServers=s, ... %[output:713fd0e1]
-        LogInterval=LogInterval); %[output:713fd0e1]
+    q = ServiceQueue( ...
+        ArrivalRate=lambda, ...
+        DepartureRate=mu, ...
+        NumServers=s, ...
+        LogInterval=LogInterval);
     q.schedule_event(Arrival(random(q.InterArrivalDist), Customer(1)));
     run_until(q, MaxTime);
     QSamples{SampleNum} = q;
-end %[output:group:88b6fa6e]
+end
 %%
 %[text] ## Collect measurements of how many customers are in the system
 %[text] Count how many customers are in the system at each log entry for each sample run.  There are two ways to do this.  You only have to do one of them.
@@ -113,16 +113,12 @@ end
 % L Simulated
 NumInSystem = vertcat(NumInSystemSamples{:});
 meanNumInSystemSamples = mean(NumInSystem);
-
 fprintf("Mean number in system: %f\n", meanNumInSystemSamples);
-
 
 % L_q Simulated
 NumInWaiting = vertcat(NumInWaitingSamples{:});
 meanNumInWaitingSamples = mean(NumInWaiting);
-
 fprintf("Mean number waiting in system: %f\n", meanNumInWaitingSamples);
-
 %[text] ### Option two: Map a function over the cell array of ServiceQueue objects.
 %[text] The `@(q) ...` expression is shorthand for a function that takes a ServiceQueue as input, names it `q`, and computes the sum of two columns from its log.  The `cellfun` function applies that function to each item in `QSamples`. The option `UniformOutput=false` tells `cellfun` to produce a cell array rather than a numerical array.
 %NumInSystemSamples = cellfun( ...
@@ -306,22 +302,43 @@ ylabel(ax, "Probability");
 pause(2);
 exportgraphics(fig, PictureFolder + filesep + "ServiceTime_histogram.pdf");
 %%
-%%4.3
-%%
+%L_q (expected number of customers waiting)
+%fig = figure();
+%t = tiledlayout(fig,1,1);
+%ax = nexttile(t);
 
+%h = histogram(ax, Lq_sim, Normalization="probability", BinMethod="integers");
+%title(ax, "expected count waiting");
+%xlabel(ax, "Time");
+%ylabel(ax, "Probability");
+%[text] Set ranges on the axes.
+%ylim(ax, [0, 0.2]);
+%xlim(ax, [0, 2.0]);
+%[text] Wait for MATLAB to catch up.
+%pause(2);
+%[text] Save the picture.
+%exportgraphics(fig, PictureFolder + filesep + "Expected count waiting histogram.pdf");
+%exportgraphics(fig, PictureFolder + filesep + "Expected count waiting histogram.svg");
+%compute waiting time
+%TimeWaitingSamples = cellfun(...
+    %@(q) cellfun(@(c) c.BeginServiceTime - c.ArrivalTime, q.Served'), ...
+    %QSamples,...
+    %UniformOutput=false);
+%TimeWaiting = vertcat(TimeWaitingSamples{:});
+%meanTimeWaiting = mean(TimeWaiting);
 
-% empirical P_n
-nMax = 5;
+%compute Lq
+%Lq_theory = lambda * meanTimeWaiting;
 
-[counts, edges] = histcounts(NumInSystem, ...
-    0:nMax+1, ...
-    'Normalization','probability');
-figure;
-bar(0:nMax, counts, 0.6);   % empirical Pn
-hold on;
+%final sim vector
+%theory = [L_sim, Lq_sim, W_sim, Wq_sim];
 
-scatter(0:nMax, P, 80, 'r', 'filled');  % theoretical P0...P5
+%L_sim_emp  = meanNumInSystem;
+%W_sim_emp  = meanTimeInSystem;
+%Wq_sim_emp = meanTimeWaiting;
+%Lq_sim_emp = lambda * Wq_sim_emp;
 
+<<<<<<< HEAD
 xlabel('n (number in system)');
 ylabel('Probability');
 legend('Simulation (Histogram)', 'Theory (P_n)');
@@ -373,6 +390,26 @@ rehash toolboxcache
 dbstop if error
 
 q = ServiceQueue;
+=======
+%sim = [L_sim_emp, Lq_sim_emp, W_sim_emp, Wq_sim_emp];
+
+% Safe percent discrepancy calculation
+%pct = nan(size(theory));                % preallocate
+%nonzero = theory ~= 0;                  % indices where theory nonzero
+%pct(nonzero) = 100 * abs(sim(nonzero) - theory(nonzero)) ./ abs(theory(nonzero));
+%pct(~nonzero)  = abs(sim(~nonzero) - theory(~nonzero)); % absolute diff when theory == 0
+
+% Display nicely
+%for k = 1:numel(theory)
+    %if theory(k) ~= 0
+        %fprintf('Stat %d: theory = %.4g, sim = %.4g, discrepancy = %.3f%%n', ...
+               % k, theory(k), sim(k), pct(k));
+   % else
+      %  fprintf('Stat %d: theory = 0, sim = %.4g, abs discrepancy = %.4g\n', ...
+              %  k, sim(k), pct(k));
+    %end
+%end
+>>>>>>> c9132a9df3514cd2dc283535ae1e360ab8f20898
 %%
 %[text] Average Value Estimates: 
 %[text] $lambda$ = $2$
@@ -400,6 +437,7 @@ q = ServiceQueue;
 %[metadata:view]
 %   data: {"layout":"inline","rightPanelPercent":34.1}
 %---
+<<<<<<< HEAD
 %[output:1bdba0a7]
 %   data: {"dataType":"warning","outputData":{"text":"Warning: Directory already exists."}}
 %---
@@ -436,3 +474,5 @@ q = ServiceQueue;
 %[output:462731a7]
 %   data: {"dataType":"warning","outputData":{"text":"Warning: Objects of 'onCleanup' class exist.  Cannot clear this class or any of its superclasses."}}
 %---
+=======
+>>>>>>> c9132a9df3514cd2dc283535ae1e360ab8f20898

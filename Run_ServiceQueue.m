@@ -89,20 +89,12 @@ end
 % L Simulated
 NumInSystem = vertcat(NumInSystemSamples{:});
 meanNumInSystemSamples = mean(NumInSystem);
-
-fprintf("Mean number in system: %f\n", meanNumInSystemSamples); %[output:2bb20103]
-======= %[output:61e8782c]
 fprintf("Mean number in system: %f\n", meanNumInSystemSamples);
->>>>>>> 3d865e736fa6ec34a25a8d285189890523c98cde
 
 % L_q Simulated
 NumInWaiting = vertcat(NumInWaitingSamples{:});
 meanNumInWaitingSamples = mean(NumInWaiting);
-<<<<<<< HEAD
-fprintf("Mean number waiting in system: %f\n", meanNumInWaitingSamples); %[output:1456143a]
-=======
 fprintf("Mean number waiting in system: %f\n", meanNumInWaitingSamples);
->>>>>>> 3d865e736fa6ec34a25a8d285189890523c98cde
 %[text] ### Option two: Map a function over the cell array of ServiceQueue objects.
 %[text] The `@(q) ...` expression is shorthand for a function that takes a ServiceQueue as input, names it `q`, and computes the sum of two columns from its log.  The `cellfun` function applies that function to each item in `QSamples`. The option `UniformOutput=false` tells `cellfun` to produce a cell array rather than a numerical array.
 %NumInSystemSamples = cellfun( ...
@@ -370,83 +362,8 @@ exportgraphics(fig, PictureFolder + filesep + "CustomersServed_histogram.pdf");
 %[text] $W$ = $\\frac{L\_q}{lambda}=\\frac{\\frac{4}{3}}{2}=\\frac{4}{6}=\\frac{2}{3} = 0.667$
 %[text] How do these compare to the simulation numbers:
 
-
-
-
-
-
-<<<<<<< HEAD
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
->>>>>>> 3d865e736fa6ec34a25a8d285189890523c98cde
-
 %[appendix]{"version":"1.0"}
 %---
 %[metadata:view]
 %   data: {"layout":"inline","rightPanelPercent":34.1}
-%---
-%[output:2bb20103]
-%   data: {"dataType":"text","outputData":{"text":"Mean number in system: 1.881563\n","truncated":false}}
-%---
-%[output:61e8782c]
-%   data: {"dataType":"error","outputData":{"errorType":"syntax","isTransient":false,"text":"Invalid use of operator."}}
-%---
-%[output:1456143a]
-%   data: {"dataType":"text","outputData":{"text":"Mean number waiting in system: 1.225046\n","truncated":false}}
 %---
