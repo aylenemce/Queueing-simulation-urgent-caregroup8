@@ -16,9 +16,7 @@ lambda = 2;
 %[text] Departure (service) rate: 1 per 20 minutes, so 3 per hour.
 mu = 3;
 %[text] Number of serving stations.
-s = 1;
-% NEW:
-%s = 2;
+s = 2;
 %[text] Reneging time is 15 minutes.
 theta = 4;
 %[text] Run many samples of the queue.
@@ -30,47 +28,30 @@ LogInterval = 0.2;
 %%
 %[text] ## Numbers from theory for M/M/1+M queue
 %[text] Compute `P(1+n)` = $P\_n$ = probability of finding the system in state $n$ in the long term. Note that this calculation assumes $s=1$.
-% Solving 3.1 and 3.2
-P0 = 1/hypergeom(1, mu/theta, lambda/theta);
 nMax = 5;
 P = zeros([nMax + 1, 1]);
-P(1) = P0;
+
+P(1) = 1;
 
 for j = 1:nMax
-    P(j + 1) = P(j) * (lambda / (mu + (j - 1) * theta));
+    if j == 1
+        mu_n = mu;                 
+    elseif j == 2
+        mu_n = 2 * mu;             
+    else
+        mu_n = 2 * mu + (j - 2) * theta; 
+    end
+    
+    P(j + 1) = P(j) * (lambda / mu_n);
 end
 
-% Solving 3.2.2
-pi_s = (mu * (1 - P0)) / lambda;
+P = P / sum(P);
+P0 = P(1);
 
-fprintf('P0 to P5: %s\n', mat2str(P, 4)); %[output:575fb7da]
-fprintf('Fraction served (pi_s): %.4f\n', pi_s); %[output:290f43c0]
+pi_s = (mu*P(2) + sum(2*mu * P(3:end))) / lambda;
 
-% NEW:
-%nMax = 5;
-%P = zeros([nMax + 1, 1]);
-
-%P(1) = 1;
-
-%for j = 1:nMax
-    %if j == 1
-        %mu_n = mu;                 
-    %elseif j == 2
-        %mu_n = 2 * mu;             
-    %else
-        %mu_n = 2 * mu + (j - 2) * theta; 
-    %end
-    
-    %P(j + 1) = P(j) * (lambda / mu_n);
-%end
-
-%P = P / sum(P);
-%P0 = P(1);
-
-%pi_s = (mu*P(2) + sum(2*mu * P(3:end))) / lambda;
-
-%fprintf('P0 to P5: %s\n', mat2str(P, 4));
-%fprintf('Fraction served (pi_s): %.4f\n', pi_s);
+fprintf('P0 to P5: %s\n', mat2str(P, 4));
+fprintf('Fraction served (pi_s): %.4f\n', pi_s);
 %%
 %fprintf('P(%d) = %.6f\n', n, P(n+1));
 n_vals = 0:nMax;
@@ -340,13 +321,9 @@ title('Empirical vs Theoretical P_n'); %[output:549e341b]
 %%
 classes = cellfun(@class, QSamples, 'UniformOutput', false) %[output:08f8f3d3]
 %%
-RenegedCounts = cellfun(@(q)...
-    length(q.Reneged) / (length(q.Reneged)+ length(q.Served)), QSamples);
-
-% NEW:
-%RenegedCounts = cellfun(@(q) length(q.Reneged) / (length(q.Reneged) + length(q.Served)), QSamples);
-%meanRenegedFraction = mean(RenegedCounts);
-%fprintf('Average fraction of customers lost to reneging: %.4f\n', meanRenegedFraction);
+RenegedCounts = cellfun(@(q) length(q.Reneged) / (length(q.Reneged) + length(q.Served)), QSamples);
+meanRenegedFraction = mean(RenegedCounts);
+fprintf('Average fraction of customers lost to reneging: %.4f\n', meanRenegedFraction);
 
 figure; %[output:621d1f83]
 histogram(RenegedCounts, 'Normalization','probability'); %[output:621d1f83]
@@ -440,12 +417,6 @@ ylabel('Probability'); %[output:621d1f83]
 %---
 %[output:719d43e9]
 %   data: {"dataType":"warning","outputData":{"text":"Warning: Directory already exists."}}
-%---
-%[output:575fb7da]
-%   data: {"dataType":"text","outputData":{"text":"P0 to P5: [0.5272;0.3514;0.1004;0.01826;0.002434;0.0002562]\n","truncated":false}}
-%---
-%[output:290f43c0]
-%   data: {"dataType":"text","outputData":{"text":"Fraction served (pi_s): 0.7092\n","truncated":false}}
 %---
 %[output:244e03c5]
 %   data: {"dataType":"text","outputData":{"text":"10 20 30 40 50 60 70 80 90 100 ","truncated":false}}
