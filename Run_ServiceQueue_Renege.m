@@ -19,6 +19,8 @@ lambda = 2;
 mu = 3;
 %[text] Number of serving stations.
 s = 1;
+% NEW:
+%s = 2;
 %[text] Reneging time is 15 minutes.
 theta = 4;
 %[text] Run many samples of the queue.
@@ -46,23 +48,40 @@ pi_s = (mu * (1 - P0)) / lambda;
 fprintf('P0 to P5: %s\n', mat2str(P, 4)); %[output:19eb5b64]
 fprintf('Fraction served (pi_s): %.4f\n', pi_s); %[output:9c1c0981]
 
+% NEW:
+%nMax = 5;
+%P = zeros([nMax + 1, 1]);
 
-P0 = 1/hypergeom(1, mu/theta, lambda/theta);
+%P(1) = 1;
 
-nMax = 5;
-P = zeros([nMax + 1, 1]);
-P(1) = P0;
+%for j = 1:nMax
+    %if j == 1
+        %mu_n = mu;                 
+    %elseif j == 2
+        %mu_n = 2 * mu;             
+    %else
+        %mu_n = 2 * mu + (j - 2) * theta; 
+    %end
+    
+    %P(j + 1) = P(j) * (lambda / mu_n);
+%end
 
-for j = 1:nMax
-    P(j + 1) = P(j) * (lambda / (mu + (j - 1) * theta));
-end
+%P = P / sum(P);
+%P0 = P(1);
 
+%pi_s = (mu*P(2) + sum(2*mu * P(3:end))) / lambda;
+
+%fprintf('P0 to P5: %s\n', mat2str(P, 4));
+%fprintf('Fraction served (pi_s): %.4f\n', pi_s);
 %%
 %fprintf('P(%d) = %.6f\n', n, P(n+1));
 n_vals = 0:nMax;
 L_theory = sum(n_vals' .* P); 
 
 Lq_theory = sum(max(0, n_vals - s)' .* P);
+
+%NEW:
+%Lq_theory = sum(max(0, n_vals - s)' .* P);
 
 lambda_eff = lambda * pi_s; 
 W_theory = L_theory / lambda_eff;
@@ -90,6 +109,7 @@ for SampleNum = 1:NumSamples %[output:group:6407e4c2]
         NumServers=s, ...
         LogInterval=LogInterval,...
         RenegeRate = theta);
+
     q.schedule_event(Arrival(random(q.InterArrivalDist), Customer(1)));
     run_until(q, MaxTime);
     QSamples{SampleNum} = q;
@@ -392,6 +412,12 @@ classes = cellfun(@class, QSamples, 'UniformOutput', false) %[output:1e5a2566]
 %%
 RenegedCounts = cellfun(@(q)...
     length(q.Reneged) / (length(q.Reneged)+ length(q.Served)), QSamples);
+
+% NEW:
+%RenegedCounts = cellfun(@(q) length(q.Reneged) / (length(q.Reneged) + length(q.Served)), QSamples);
+%meanRenegedFraction = mean(RenegedCounts);
+%fprintf('Average fraction of customers lost to reneging: %.4f\n', meanRenegedFraction);
+
 figure; %[output:22b194a7]
 histogram(RenegedCounts, 'Normalization','probability'); %[output:22b194a7]
 title('Number of Reneged Customers per Run'); %[output:22b194a7]

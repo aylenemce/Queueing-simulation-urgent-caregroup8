@@ -27,10 +27,14 @@ classdef ServiceQueueRenege < ServiceQueue
             NumServers = KWArgs.NumServers, ...
             LogInterval = KWArgs.LogInterval );
 
-    % --- subclass-specific setup ---
+            % --- subclass-specific setup ---
             obj.RenegeRate = KWArgs.RenegeRate;
             obj.RenegeDist = makedist("Exponential", ...
             'mu', 1/obj.RenegeRate);
+
+            % NEW:
+            % This creates the 5th column required by Section 3.3.2 [cite: 76]
+            %obj.Log.NumReneged = zeros(0, 1, 'int64');
 
          end
         
@@ -40,10 +44,19 @@ classdef ServiceQueueRenege < ServiceQueue
             handle_arrival@ServiceQueue(obj, arrival);
 
             % NOW add reneging behavior only
+            % This section would be deleted for the M/M/2 simulation
             c = arrival.Customer;
 
             patience_time = random(obj.RenegeDist);
             obj.schedule_event(Renege(obj.Time + patience_time, c.Id));
+            
+            % NEW:
+            % In an M/M/2 system, they only wait if NumInSystem > 2 (since 2 are being served).
+            %if obj.NumInSystem > obj.NumServers
+                 %c = arrival.Customer;
+                 %patience_time = random(obj.RenegeDist);
+                 %obj.schedule_event(Renege(obj.Time + patience_time, c.Id));
+            %end
 
         end
 
@@ -57,14 +70,23 @@ classdef ServiceQueueRenege < ServiceQueue
             % DO NOT touch Waiting directly
             % just ignore them in future processing
 
+            % NEW:
+            % 2. REMOVE them from the Waiting queue 
+            %obj.Waiting(i) = [];
+
                 return
             end
+            end
         end
-    end
+
        
         function record_log(obj)
             % Keep original log behavior (4 columns ONLY)
             record_log@ServiceQueue(obj);
+
+            % NEW:
+            % Add the total count of customers who have reneged to the last row 
+            %obj.Log.NumReneged(end) = length(obj.Reneged);
         end
     end
 end
