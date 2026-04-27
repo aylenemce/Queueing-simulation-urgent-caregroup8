@@ -29,7 +29,7 @@ classdef ServiceQueue < handle
     
     end
 
-    properties (SetAccess = private)
+    properties (SetAccess = protected)
         % Time - Current time.
         Time = 0;
 
