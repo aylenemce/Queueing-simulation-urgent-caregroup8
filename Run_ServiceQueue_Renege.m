@@ -78,9 +78,6 @@ L_theory = sum(n_vals' .* P);
 
 Lq_theory = sum(max(0, n_vals - s)' .* P);
 
-%NEW:
-%Lq_theory = sum(max(0, n_vals - s)' .* P);
-
 lambda_eff = lambda * pi_s; 
 W_theory = L_theory / lambda_eff;
 Wq_theory = Lq_theory / lambda_eff;
