@@ -2,12 +2,16 @@
 %[text] Collect statistics and plot histograms along the way.
 %%
 clear all
+<<<<<<< HEAD
 clear classes %[output:74300f03] %[output:1fc5d5e9] %[output:9cb27797] %[output:475fc76d] %[output:7ded0e75] %[output:4075851e] %[output:021d1fda] %[output:5aaabb27] %[output:7fefbce2] %[output:4e60be32] %[output:20935838] %[output:911f0bc6] %[output:6cdb25d2] %[output:272f9ffd] %[output:48805786] %[output:852a685c]
+=======
+clear classes
+>>>>>>> 04120cb078ca7ab32b96fdda9483d17d7f5d3ad9
 clc
 rehash toolboxcache
 %%
 PictureFolder = "Pictures";
-mkdir(PictureFolder); %[output:2b1c5edc]
+mkdir(PictureFolder);
 %%
 %[text] ## Set up
 %[text] `We'll measure time in hours`
@@ -58,8 +62,8 @@ end
 
 pi_s = pi_s / lambda;
 
-fprintf('P0 to P5: %s\n', mat2str(P, 4)); %[output:29594e46]
-fprintf('Fraction served (pi_s): %.4f\n', pi_s); %[output:2bc36952]
+fprintf('P0 to P5: %s\n', mat2str(P, 4));
+fprintf('Fraction served (pi_s): %.4f\n', pi_s);
 %%
 %fprintf('P(%d) = %.6f\n', n, P(n+1));
 n_vals = 0:nMax;
@@ -71,7 +75,7 @@ lambda_eff = lambda * pi_s;
 W_theory = L_theory / lambda_eff;
 Wq_theory = Lq_theory / lambda_eff;
 
-theory = [L_theory, Lq_theory, W_theory, Wq_theory] %[output:87303a51]
+theory = [L_theory, Lq_theory, W_theory, Wq_theory]
 %%
 %[text] ## Run simulation samples
 %[text] This is the most time consuming calculation in the script, so let's put it in its own section.  That way, we can run it once, and more easily run the faster calculations multiple times as we add features to this script.
@@ -79,7 +83,7 @@ theory = [L_theory, Lq_theory, W_theory, Wq_theory] %[output:87303a51]
 rng("default");
 %[text] We'll store our queue simulation objects in this list.
 QSamples = cell([NumSamples, 1]);
-%[text] `The statistics come out weird if the log interval is too short, because the log entries are not independent enough.  So the log interval should be long enough for several arrival and departure events happen.`
+%[text] The statistics come out weird if the log interval is too short, because the log entries are not independent enough.  So the log interval should be long enough for several arrival and departure events happen.
 for SampleNum = 1:NumSamples
     if mod(SampleNum, 100) == 0
         fprintf("\n");
@@ -125,7 +129,11 @@ end
 % L Simulated
 NumInSystem = vertcat(NumInSystemSamples{:});
 meanNumInSystemSamples = mean(NumInSystem);
+<<<<<<< HEAD
 fprintf("Mean number in system: %f\n", meanNumInSystemSamples); %[output:8dfb38a4]
+=======
+fprintf("Mean number in system: %f\n", meanNumInSystemSamples);
+>>>>>>> 04120cb078ca7ab32b96fdda9483d17d7f5d3ad9
 
 NumInServiceSamples = cell([NumSamples, 1]);
 
@@ -139,7 +147,11 @@ NumInService = vertcat(NumInServiceSamples{:});
 % L_q Simulated
 NumInWaiting = vertcat(NumInWaitingSamples{:});
 meanNumInWaitingSamples = mean(NumInWaiting);
+<<<<<<< HEAD
 fprintf("Mean number waiting in system: %f\n", meanNumInWaitingSamples); %[output:27ae5d71]
+=======
+fprintf("Mean number waiting in system: %f\n", meanNumInWaitingSamples);
+>>>>>>> 04120cb078ca7ab32b96fdda9483d17d7f5d3ad9
 %[text] ### Option two: Map a function over the cell array of ServiceQueue objects.
 %[text] The `@(q) ...` expression is shorthand for a function that takes a ServiceQueue as input, names it `q`, and computes the sum of two columns from its log.  The `cellfun` function applies that function to each item in `QSamples`. The option `UniformOutput=false` tells `cellfun` to produce a cell array rather than a numerical array.
 %NumInSystemSamples = cellfun( ...
@@ -159,30 +171,30 @@ NumInSystem = vertcat(NumInSystemSamples{:});
 meanNumInSystem = mean(NumInSystem);
 %fprintf("Mean number in system: %f\n", meanNumInSystem);
 %[text] Make a figure with one set of axes.
-fig = figure(); %[output:2c397197]
-t = tiledlayout(fig,1,1); %[output:2c397197]
-ax = nexttile(t); %[output:2c397197]
+fig = figure();
+t = tiledlayout(fig,1,1);
+ax = nexttile(t);
 %[text] MATLAB-ism: Once you've created a picture, you can use `hold` to cause further plotting functions to work with the same picture rather than create a new one.
-hold(ax, "on"); %[output:2c397197]
+hold(ax, "on");
 %[text] Start with a histogram.  The result is an empirical PDF, that is, the area of the bar at horizontal index n is proportional to the fraction of samples for which there were n customers in the system.  The data for this histogram is counts of customers, which must all be whole numbers.  The option `BinMethod="integers"` means to use bins $(-0.5, 0.5), (0.5, 1.5), \\dots$ so that the height of the first bar is proportional to the count of 0s in the data, the height of the second bar is proportional to the count of 1s, etc. MATLAB can choose bins automatically, but since we know the data consists of whole numbers, it makes sense to specify this option so we get consistent results.
-h = histogram(ax, NumInSystem, 'Normalization',"probability",'BinEdges', -0.5:1:(nMax+0.5)); %[output:2c397197]
+h = histogram(ax, NumInSystem, 'Normalization',"probability",'BinEdges', -0.5:1:(nMax+0.5));
 %[text] Plot $(0, P\_0), (1, P\_1), \\dots$.  If all goes well, these dots should land close to the tops of the bars of the histogram.
-plot(ax, 0:nMax, P, 'ro', 'MarkerSize', 10, 'MarkerFaceColor', 'r', 'DisplayName', 'Theory (Reneging)'); %[output:2c397197]
+plot(ax, 0:nMax, P, 'ro', 'MarkerSize', 10, 'MarkerFaceColor', 'r', 'DisplayName', 'Theory (Reneging)');
 %[text] Add titles and labels and such.
-title(ax, "Number of customers in the system"); %[output:2c397197]
-xlabel(ax, "Count"); %[output:2c397197]
-ylabel(ax, "Probability"); %[output:2c397197]
-legend(ax, "simulation", "theory"); %[output:2c397197]
+title(ax, "Number of customers in the system");
+xlabel(ax, "Count");
+ylabel(ax, "Probability");
+legend(ax, "simulation", "theory");
 %[text] Set ranges on the axes. MATLAB's plotting functions do this automatically, but when you need to compare two sets of data, it's a good idea to use the same ranges on the two pictures.  To start, you can let MATLAB choose the ranges automatically, and just know that it might choose very different ranges for different sets of data.  Once you're certain the picture content is correct, choose an x range and a y range that gives good results for all sets of data.  The final choice of ranges is a matter of some trial and error.  You generally have to do these commands *after* calling `plot` and `histogram`.
 %[text] This sets the vertical axis to go from $0$ to $0.2$.
 %ylim(ax, [0, 0.2]);
 %[text] This sets the horizontal axis to go from $-1$ *to* $21$*.  The histogram will use bins* $(-0.5, 0.5), (0.5, 1.5), \\dots$ so this leaves some visual breathing room on the left.
-xlim(ax, [0, nMax]); %[output:2c397197]
+xlim(ax, [0, nMax]);
 %[text] MATLAB-ism: You have to wait a couple of seconds for those settings to take effect or `exportgraphics` will screw up the margins.
 pause(2);
 %[text] Save the picture.
-exportgraphics(fig, PictureFolder + filesep + "Number in system histogram.pdf"); %[output:2c397197]
-exportgraphics(fig, PictureFolder + filesep + "Number in system histogram.svg"); %[output:2c397197]
+exportgraphics(fig, PictureFolder + filesep + "Number in system histogram.pdf");
+exportgraphics(fig, PictureFolder + filesep + "Number in system histogram.svg");
 %fprintf("Mean number in system: %f\n", meanNumInSystem);
 
 
@@ -205,30 +217,30 @@ for k = 1:nMax-1
     end
 end
 
-fig = figure(); %[output:0eade834]
-t = tiledlayout(fig,1,1); %[output:0eade834]
-ax = nexttile(t); %[output:0eade834]
-hold(ax, "on"); %[output:0eade834]
+fig = figure();
+t = tiledlayout(fig,1,1);
+ax = nexttile(t);
+hold(ax, "on");
 
 % Histogram
-h = histogram(ax, NumInWaiting, ... %[output:0eade834]
-    'Normalization','probability', ... %[output:0eade834]
-    'BinEdges', -0.5:1:(nMax+0.5)); %[output:0eade834]
+h = histogram(ax, NumInWaiting, ...
+    'Normalization','probability', ...
+    'BinEdges', -0.5:1:(nMax+0.5));
 
-xlim(ax, [0 nMax-1]); %[output:0eade834]
+xlim(ax, [0 nMax-1]);
 
 % Overlay theory
-plot(ax, 0:nMax-1, H, 'ro', ... %[output:0eade834]
-    'MarkerSize', 8, ... %[output:0eade834]
-    'MarkerFaceColor', 'r'); %[output:0eade834]
+plot(ax, 0:nMax-1, H, 'ro', ...
+    'MarkerSize', 8, ...
+    'MarkerFaceColor', 'r');
 
-title(ax, "Number waiting in queue"); %[output:0eade834]
-xlabel(ax, "n"); %[output:0eade834]
-ylabel(ax, "Probability"); %[output:0eade834]
-legend(ax, "Simulation", "Theory"); %[output:0eade834]
+title(ax, "Number waiting in queue");
+xlabel(ax, "n");
+ylabel(ax, "Probability");
+legend(ax, "Simulation", "Theory");
 
 pause(2);
-exportgraphics(fig, PictureFolder + filesep + "Lq_histogram.pdf"); %[output:0eade834]
+exportgraphics(fig, PictureFolder + filesep + "Lq_histogram.pdf");
 
 
 %[text] 
@@ -286,12 +298,12 @@ end
 TimeInSystemSamples = vertcat(TimeInSystemSamples{:});
 TimeInSystem = TimeInSystemSamples;
 meanTimeInSystemSamples = mean(TimeInSystemSamples);
-fprintf("Mean time in system: %f\n", meanTimeInSystemSamples); %[output:415da874]
+fprintf("Mean time in system: %f\n", meanTimeInSystemSamples);
 
 % W_q Simulated
 WaitingInSystemSamples = vertcat(WaitingInSystemSamples{:});
 meanWaitingInSystemSamples = mean(WaitingInSystemSamples);
-fprintf("Mean waiting time in system: %f\n", meanWaitingInSystemSamples); %[output:28e2afde]
+fprintf("Mean waiting time in system: %f\n", meanWaitingInSystemSamples);
 %[text] ### Option two: Use `cellfun` twice.
 %[text] The outer call to `cellfun` means do something to each `ServiceQueue` object in `QSamples`.  The "something" it does is to look at each customer in the `ServiceQueue` object's list q.Served and compute the time it spent in the system.
 %TimeInSystemSamples = cellfun( ...
@@ -307,46 +319,47 @@ fprintf("Mean waiting time in system: %f\n", meanWaitingInSystemSamples); %[outp
 
 %fprintf("Mean time in system: %f\n", meanTimeInSystem);
 %[text] Make a figure with one set of axes.
-fig = figure(); %[output:2c455e85]
-t = tiledlayout(fig,1,1); %[output:2c455e85]
-ax = nexttile(t); %[output:2c455e85]
+fig = figure();
+t = tiledlayout(fig,1,1);
+ax = nexttile(t);
 %[text] This time, the data is a list of real numbers, not integers.  The option `BinWidth=...` means to use bins of a particular width, and choose the left-most and right-most edges automatically.  Instead, you could specify the left-most and right-most edges explicitly.  For instance, using `BinEdges=0:0.5:60` means to use bins $(0, 0.5), (0.5, 1.0), \\dots$
-h = histogram(ax, TimeInSystem, Normalization="probability", BinWidth=5/60); %[output:2c455e85]
+h = histogram(ax, TimeInSystem, Normalization="probability", BinWidth=5/60);
 %[text] Add titles and labels and such.
 %tvals = linspace(0, max(TimeInSystem), 300);
 %fw = (mu - lambda) * exp(-(mu - lambda) * tvals);
 %plot(ax, tvals, fw * (5/60), 'r', 'LineWidth', 2);
-title(ax, "Time in the system"); %[output:2c455e85]
-xlabel(ax, "Time"); %[output:2c455e85]
-ylabel(ax, "Probability"); %[output:2c455e85]
+title(ax, "Time in the system");
+xlabel(ax, "Time");
+ylabel(ax, "Probability");
 %[text] Set ranges on the axes.
 %ylim(ax, [0, 0.2]);
-xlim(ax, [0, nMax]); %[output:2c455e85]
+xlim(ax, [0, nMax]);
 %[text] Wait for MATLAB to catch up.
 pause(2);
 %[text] Save the picture.
-exportgraphics(fig, PictureFolder + filesep + "Time in system histogram.pdf"); %[output:2c455e85]
-exportgraphics(fig, PictureFolder + filesep + "Time in system histogram.svg"); %[output:2c455e85]
+exportgraphics(fig, PictureFolder + filesep + "Time in system histogram.pdf");
+exportgraphics(fig, PictureFolder + filesep + "Time in system histogram.svg");
 
 % histogram for W_q
-fig = figure(); %[output:1e77d9ac]
-t = tiledlayout(fig,1,1); %[output:1e77d9ac]
-ax = nexttile(t); %[output:1e77d9ac]
+fig = figure();
+t = tiledlayout(fig,1,1);
+ax = nexttile(t);
 TimeWaiting = WaitingInSystemSamples;
-h = histogram(ax, TimeWaiting, Normalization = "probability", BinWidth = 5/60); %[output:1e77d9ac]
+h = histogram(ax, TimeWaiting, Normalization = "probability", BinWidth = 5/60);
 rho = lambda / mu;
 tvals = linspace(0, max(TimeWaiting), 300);
 %fWq = rho * (mu - lambda) * exp(-(mu - lambda) * tvals);
 %plot(ax, tvals, fWq * (5/60), 'r', 'LineWidth', 2);
-title(ax, "Waiting time in queue"); %[output:1e77d9ac]
-xlabel(ax, "Time (hours)"); %[output:1e77d9ac]
-ylabel(ax, "Probability"); %[output:1e77d9ac]
+title(ax, "Waiting time in queue");
+xlabel(ax, "Time (hours)");
+ylabel(ax, "Probability");
 pause(2);
-exportgraphics(fig, PictureFolder + filesep + "Wq_histogram.pdf"); %[output:1e77d9ac]
+exportgraphics(fig, PictureFolder + filesep + "Wq_histogram.pdf");
 ServiceTimes = cellfun(@(q) cellfun(@(c) c.DepartureTime - c.BeginServiceTime, q.Served'), QSamples, UniformOutput=false);
 ServiceTimes = vertcat(ServiceTimes{:});
 CustomersServed = cellfun(@(q) length(q.Served), QSamples);
 %histogram for service times
+<<<<<<< HEAD
 fig = figure(); %[output:669b8181]
 t = tiledlayout(fig,1,1); %[output:669b8181]
 ax = nexttile(t); %[output:669b8181]
@@ -361,6 +374,22 @@ xlabel('n (number in system)'); %[output:669b8181]
 ylabel('Probability'); %[output:669b8181]
 legend('Simulation (Histogram)', 'Theory (P_n)'); %[output:04156a77] %[output:669b8181]
 title('Empirical vs Theoretical P_n'); %[output:669b8181]
+=======
+fig = figure();
+t = tiledlayout(fig,1,1);
+ax = nexttile(t);
+h = histogram(ax, ServiceTimes, Normalization = "probability", BinWidth = 5/60);
+title(ax, "Service Time Distribution");
+xlabel(ax, "Time (hours)");
+ylabel(ax, "Probability");
+pause(2);
+exportgraphics(fig, PictureFolder + filesep + "ServiceTime_histogram.pdf");
+
+xlabel('n (number in system)');
+ylabel('Probability');
+legend('Simulation (Histogram)', 'Theory (P_n)');
+title('Empirical vs Theoretical P_n');
+>>>>>>> 04120cb078ca7ab32b96fdda9483d17d7f5d3ad9
 %%
 %[text] ## Numbers of customers reneged
 %%
@@ -368,11 +397,15 @@ title('Empirical vs Theoretical P_n'); %[output:669b8181]
 %%
 %[text] ## Numbers of customers reneged
 %%
+<<<<<<< HEAD
 classes = cellfun(@class, QSamples, 'UniformOutput', false) %[output:6a450af7]
+=======
+classes = cellfun(@class, QSamples, 'UniformOutput', false)
+>>>>>>> 04120cb078ca7ab32b96fdda9483d17d7f5d3ad9
 %%
 RenegedCounts = cellfun(@(q) length(q.Reneged) / (length(q.Reneged) + length(q.Served)), QSamples);
 meanRenegedFraction = mean(RenegedCounts);
-fprintf('Average fraction of customers lost to reneging: %.4f\n', meanRenegedFraction); %[output:59aa55a4]
+fprintf('Average fraction of customers lost to reneging: %.4f\n', meanRenegedFraction);
 
 
 
@@ -380,14 +413,14 @@ fprintf('Average fraction of customers lost to reneging: %.4f\n', meanRenegedFra
 
 NumReneged = cellfun(@(q) length(q.Reneged), QSamples);
 
-fig = figure(); %[output:63d0d143]
-ax = axes(fig); %[output:63d0d143]
+fig = figure();
+ax = axes(fig);
 
-histogram(ax, NumReneged, ... %[output:63d0d143]
-    Normalization="probability", ... %[output:63d0d143]
-    BinMethod="integers"); %[output:63d0d143]
+histogram(ax, NumReneged, ...
+    Normalization="probability", ...
+    BinMethod="integers");
 
-hold(ax, "on"); %[output:63d0d143]
+hold(ax, "on");
 
 nMax = max(NumReneged);
 n = 0:nMax;
@@ -396,14 +429,14 @@ counts = histcounts(NumReneged, ...
     'BinMethod','integers', ...
     'Normalization','probability');
 
-plot(ax, n, counts(1:length(n)), 'o', ... %[output:63d0d143]
-    MarkerEdgeColor='k', ... %[output:63d0d143]
-    MarkerFaceColor='r'); %[output:63d0d143]
+plot(ax, n, counts(1:length(n)), 'o', ...
+    MarkerEdgeColor='k', ...
+    MarkerFaceColor='r');
 
-xlabel('n (number reneged)'); %[output:63d0d143]
-ylabel('Probability'); %[output:63d0d143]
-legend('Simulation', 'Overlay'); %[output:63d0d143]
-title('P_n empirical vs theoretical results'); %[output:63d0d143]
+xlabel('n (number reneged)');
+ylabel('Probability');
+legend('Simulation', 'Overlay');
+title('P_n empirical vs theoretical results');
 
 
 %%
@@ -419,91 +452,56 @@ RenegedFraction = cellfun(@(q) ...
     length(q.Reneged) / (length(q.Reneged) + length(q.Served)), ...
     QSamples);
 
-fig = figure(); %[output:6aa10b1a]
-t = tiledlayout(fig,1,1); %[output:6aa10b1a]
-ax = nexttile(t); %[output:6aa10b1a]
+fig = figure();
+t = tiledlayout(fig,1,1);
+ax = nexttile(t);
 
-histogram(ax, RenegedFraction, ... %[output:6aa10b1a]
-    'Normalization','probability', ... %[output:6aa10b1a]
-    'BinWidth', 0.02); %[output:6aa10b1a]
+histogram(ax, RenegedFraction, ...
+    'Normalization','probability', ...
+    'BinWidth', 0.02);
 
-title(ax, "Fraction of customers who reneged"); %[output:6aa10b1a]
-xlabel(ax, "Fraction"); %[output:6aa10b1a]
-ylabel(ax, "Probability"); %[output:6aa10b1a]
+title(ax, "Fraction of customers who reneged");
+xlabel(ax, "Fraction");
+ylabel(ax, "Probability");
 
 pause(2);
-exportgraphics(fig, PictureFolder + filesep + "Reneging_fraction.pdf"); %[output:6aa10b1a]
+exportgraphics(fig, PictureFolder + filesep + "Reneging_fraction.pdf");
 %%
 Utilization = NumInService / s;
 meanUtil = mean(Utilization);
-fprintf("Mean utilization per server: %f\n", meanUtil); %[output:0df099d6]
+fprintf("Mean utilization per server: %f\n", meanUtil);
 
 %%
 
 %%
-%[text] ## Part 4 question 5
-%[text] Average Value Estimates: 
-%[text] $lambda$ = $2$
-%[text] $mu$ = $3$ 
-%[text] $theta$= $4$
-%[text] $maxtime = 8$
-%[text] $hypergeom(\[1\],\[c\],z)=\\sum\_{k=0}^{\\infty}\\frac{(1)\_kz^k}{(c)\_kz!}=\\frac{x^k}{c\_k}\n$
-%[text] $c\_k = c(c+1)(c+2)...(c+k-1)$
-%[text] $c=\\frac{mu}{theta} = \\frac{3}{4}$
-%[text] $z=\\frac{lambda}{theta}=\\frac{2}{4}=\\frac{1}{2}$
-%[text] $hypergeom(\[1\].\[0.75\],\[0.5)=1+\\frac{0.5}{0.75}+\\frac{0.5^2}{0.75\*1.75}+\\frac{0.5^3}{0.75\*2.75}+...&dollar&; =1.8969$
-%[text] $P\_(n+1)=P\_n\*\\frac{lambda}{mu+(n\*theta)}$
-%[text] $P\_0=\\frac{1}{1.8969}=0.527$
-%[text] $P\_1=P\_0\*\\frac{lambda}{mu}=0.527\*\\frac{2}{3}=0.351$
-%[text] $P\_2=P\_1\*\\frac{lambda}{mu+theta}=0.351\*\\frac{2}{3+4}=0.100$
-%[text] $P\_3=P\_2\*\\frac{lambda}{mu+(2\*theta)}=0.100\*\\frac{2}{3+2(4)}=0.0182$
-%[text] $P\_4=P\_3\*\\frac{lambda}{mu+(3\*theta)}=0.0182\*\\frac{2}{3+3(4)}=0.00243$
-%[text] $P\_5=P\_4\*\\frac{lambda}{mu+(4\*theta)}=0.00243\*\\frac{2}{3+4(4)}=0.000256$
-%[text] $\\pi\_s=\\frac{mu(1-P\_0)}{lambda}=\\frac{3(1-0.527)}{2}=\\frac{1.419}{2}=0.7092$
-%[text] $L=\\sum\_{n=0}^{\\infty}n\*P\_0$
-%[text] for $n=1$: $1\*P\_1 = 0.351$
-%[text] for $n=2$: $2\*P\_2 = 2(0.100)=0.200$
-%[text] for $n=3$: $3\*P\_3 = 3(0.0182) = 0.0546$
-%[text] for $n=4$: $4\*P\_4=4(0.00243)=0.00972$
-%[text] for $n=5$: $4\*P\_5 = 5(0.00026)=0.00130$
-%[text] $L = 0.618$
-%[text] $L\_q = \\sum\_{n=0}^{\\infty}max(0,n-1)P\_n$
-%[text] for $n=2$: $(2-1)P\_2=1(0.1)=0.1$
-%[text] for $n=3$: $(3-1)P\_3=2(0.0182)=0.0364$
-%[text] for $n=4$: $(4-1)P\_4=3(0.00243)=0.00729$
-%[text] for $n=5$: $(5-1)P\_5=4(0.0026)=0.00104$
-%[text] $L\_q=0.145$
-%[text] $lambda\_e=lambda\*\\pi\_s=2(0.7092)=1.419$
-%[text] $W=\\frac{L}{lambda\_e}=\\frac{0.618}{1.419}=0.435$
-%[text] $W\_q=\\frac{L\_q}{lambda\_e}=\\frac{0.145}{1.419}=0.102$
-%[text] ## Part 4 question 6
-%[text] How do these compare to the simulation numbers:
-%[text] Comparing values for P: Very similar, a few decimals off
-%[text]     Theory: $P\[0-5\]=\[0.527, 0.351, 0.100, 0.0182, 0.00243, 0.000256}$
-%[text]     Simulation: $P\[0-5\]=\[0.5272, 0.3514, 0.1004, 0.1826, 0.002434, 0.002562\]$
-%[text] Comparing values for $\\pi\_s$: Exactly the same
-%[text]     Theory: $\\pi\_s=0.7092$
-%[text]     Simulation: $\\pi\_s=0.7092$
-%[text] Comparing the mean number in system: 0.698416 difference between theory and simulation
-%[text]     Theory: $L=0.618$
-%[text]     Simulation: $L=1.316416$
-%[text] Comparing the mean number waiting in system: 0.575456 difference between theory and simulation
-%[text]     Theory: $L\_q=0.145$
-%[text]     Simulation: $L\_q=0.7204560$
-%[text] Comparing the mean time in system: 0.164659 difference between theory and simulation
-%[text]     Theory: $W=0.435$
-%[text]     Simulation: $W=0.599659$
-%[text] Comparing the mean waiting time in system: 0.18208 difference between theory and simulation
-%[text]     Theory: $W\_q=0.102$
-%[text]     Simulation: $W\_q=0.28408$
-%[text] ## Part 4 question 7
-%[text] In theory, the reneging statistics make the system look better than the statistics without reneging. The mean number in system and mean number waiting in system are smaller in the reneging system because the system doesn't build up as long of a queue, so the number says low. The mean time in system and mean time waiting in system are also lower because the patients waiting will also be waiting for less time in the reneging system. However, this is all in theory because fewer customers are served in the reneging system. 
+%[text] ## Theoretical Calculations
+%[text] $\\lambda = 2$
+%[text] $\\mu = 3$
+%[text] $s = 2$
+%[text] $\\theta=4$
+%[text] $\\alpha= \\frac{\\lambda}{\\mu}=\\frac{2}{3}$
+%[text] $P\_0=\[1+\\alpha+\\frac{\\alpha^2}{2!}(1+\\frac{\\lambda}{2\\mu+\\theta+}...)\]^{-1}$ 
+%[text] $2\\mu = 6$
+%[text] $2\\mu+\\theta=10$
+%[text] $2\\mu+2\\theta=14$
+%[text] $\\frac{\\lambda}{10}=0.2$, $\\frac{\\lambda}{14}=0.142857$
+%[text] $L=\\sum\_{n=0}^{\\infty}nP\_n$
+%[text] $L=1(0.3438)+2(0.1146)+3(0.02292)+4(0.00327)+5(0.000363)=0.6557$
+%[text] $L\_q=\\sum\_{n=3}^{\\infty}(n-2)P\_n$
+%[text] $L\_q=1(0.02292)+2(0.00327)+3(0.000363)=0.0305$
+%[text] $P\_{abandon}=\\sum\_{n=2}^{\\infty}P\_n\*\\frac{\\theta}{2\\mu+\\theta(n-2)$
+%[text] $P\_{abandon}=0.02292(0.4)+0.00327(0.2857)+0.000363(0.2222)=0.01018$
+%[text] $\\lambda\_{eff}=\\lambda(1-P\_{abandon})=2(0.98982)=1.9796$
+%[text] $W=\\frac{L}{\\lambda\_{eff}}=\\frac{0.6567}{1.9796}=0.332$
+%[text] $W\_q=\\frac{L\_q}{\\lambda\_{eff}}=\\frac{0.0305}{1.9796}=0.0154$
+%[text] 
 
 %[appendix]{"version":"1.0"}
 %---
 %[metadata:view]
 %   data: {"layout":"inline","rightPanelPercent":12.1}
 %---
+<<<<<<< HEAD
 %[output:74300f03]
 %   data: {"dataType":"warning","outputData":{"text":"Warning: Objects of 'RecordToLog' class exist.  Cannot clear this class or any of its superclasses."}}
 %---
@@ -609,3 +607,5 @@ fprintf("Mean utilization per server: %f\n", meanUtil); %[output:0df099d6]
 %[output:0df099d6]
 %   data: {"dataType":"text","outputData":{"text":"Mean utilization per server: 0.481357\n","truncated":false}}
 %---
+=======
+>>>>>>> 04120cb078ca7ab32b96fdda9483d17d7f5d3ad9
