@@ -83,4 +83,14 @@ Comparing the mean waiting time in system: 0.18208 difference between theory and
     Theory: W_q=0.102
     Simulation: W_q=0.28408
 - Run_Service_Queue_Renege_Extension.m
-  For the Extension part of this simulation, we decided to simulate s = 2 doctors instead of 1. This time we set s = 2, and LogInterval = 0.05.
+  For the Extension part of this simulation, we decided to simulate s = 2 doctors instead of 1. This time we set s = 2, and LogInterval = 0.05. We also added a new histogram to compute the fraction of customers who reneged. RenegedFraction = cellfun(@(q) ...
+    length(q.Reneged) / (length(q.Reneged) + length(q.Served)), ...
+    QSamples)
+  Our calculations are as follows:
+L=\sum_{n=0}^{\infty}nP_n
+L=1(0.3438)+2(0.1146)+3(0.02292)+4(0.00327)+5(0.000363)=0.6557
+L_q=1(0.02292)+2(0.00327)+3(0.000363)=0.0305
+P_{abandon}=0.02292(0.4)+0.00327(0.2857)+0.000363(0.2222)=0.01018
+\lambda_{eff}=\lambda(1-P_{abandon})=2(0.98982)=1.9796
+W=\frac{L}{\lambda_{eff}}=\frac{0.6567}{1.9796}=0.332
+W_q=\frac{L_q}{\lambda_{eff}}=\frac{0.0305}{1.9796}=0.0154  
