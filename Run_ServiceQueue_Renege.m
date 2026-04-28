@@ -9,6 +9,11 @@ rehash toolboxcache
 PictureFolder = "Pictures";
 mkdir(PictureFolder);
 %%
+%[text] ## Report for renege feature simulation
+%[text] By: Sarah Kundrat, Sydney Morrison, and Aylene McEntire
+%[text] Introduction: 
+%[text] This simulation demonstrates how Chucktown Urgent Care operates when the reneging feature is added. The reneging feature adds impatience from the customers. It is still showing a M/M/1 model, which means there is still one doctor on site for an eight hour shift. 
+%%
 %[text] ## Set up
 %[text] `We'll measure time in hours`
 %[text] Arrival rate: 2 per hour.
@@ -28,7 +33,7 @@ MaxTime = 5;
 %[text] Make a log entry every so often.
 LogInterval = 0.2;
 %%
-%[text] ## Numbers from theory for M/M/1+M queue
+%[text] ## Numbers from theory for M/M/1 queue
 %[text] Compute `P(1+n)` = $P\_n$ = probability of finding the system in state $n$ in the long term. Note that this calculation assumes $s=1$.
 % Solving 3.1 and 3.2
 P0 = 1/hypergeom(1, mu/theta, lambda/theta);
@@ -45,32 +50,9 @@ pi_s = (mu * (1 - P0)) / lambda;
 
 fprintf('P0 to P5: %s\n', mat2str(P, 4));
 fprintf('Fraction served (pi_s): %.4f\n', pi_s);
-
-% NEW:
-%nMax = 5;
-%P = zeros([nMax + 1, 1]);
-
-%P(1) = 1;
-
-%for j = 1:nMax
-    %if j == 1
-        %mu_n = mu;                 
-    %elseif j == 2
-        %mu_n = 2 * mu;             
-    %else
-        %mu_n = 2 * mu + (j - 2) * theta; 
-    %end
-    
-    %P(j + 1) = P(j) * (lambda / mu_n);
-%end
-
-%P = P / sum(P);
-%P0 = P(1);
-
-%pi_s = (mu*P(2) + sum(2*mu * P(3:end))) / lambda;
-
-%fprintf('P0 to P5: %s\n', mat2str(P, 4));
-%fprintf('Fraction served (pi_s): %.4f\n', pi_s);
+%%
+%[text] ## Theoretical calculations
+%[text] Below are the theoretical calculations. These are the expected equilibrium values. 
 %%
 %fprintf('P(%d) = %.6f\n', n, P(n+1));
 n_vals = 0:nMax;
@@ -82,7 +64,7 @@ lambda_eff = lambda * pi_s;
 W_theory = L_theory / lambda_eff;
 Wq_theory = Lq_theory / lambda_eff;
 
-theory = [L_theory, Lq_theory, W_theory, Wq_theory];
+theory = [L_theory, Lq_theory, W_theory, Wq_theory]
 %%
 %[text] ## Run simulation samples
 %[text] This is the most time consuming calculation in the script, so let's put it in its own section.  That way, we can run it once, and more easily run the faster calculations multiple times as we add features to this script.
@@ -109,6 +91,9 @@ for SampleNum = 1:NumSamples
     run_until(q, MaxTime);
     QSamples{SampleNum} = q;
 end
+%%
+%[text] ## L and L\_q simulation calculations
+%[text] Below shows how to calculate the mean number in system and mean number waiting in system. These numbers are based on the simulation. We can compare these to the theory calculations.
 %%
 %[text] ## Collect measurements of how many customers are in the system
 %[text] Count how many customers are in the system at each log entry for each sample run.  There are two ways to do this.  You only have to do one of them.
@@ -156,6 +141,9 @@ NumInSystem = vertcat(NumInSystemSamples{:});
 %[text] `NumInSystem = vertcat(NumInSystemSamples{1}, NumInSystemSamples{2}, ...)`
 %[text] which concatenates all the columns of numbers in NumInSystemSamples into one long column.
 %[text] This is roughly equivalent to "splatting" in Python, which looks like `f(*args)`.
+%%
+%[text] ## Histograms for L and L\_q
+%[text] Below we are creating histograms for L and L\_q. The blue bars represent the simulated data and the red dots simulate the theory calculations. We can use these graphs to see how well they line up.
 %%
 %[text] ## Pictures and stats for number of customers in system
 %[text] Print out mean number of customers in the system.
@@ -205,7 +193,9 @@ xlabel(ax, "Count");
 ylabel(ax, "Probability");
 pause(2);
 exportgraphics(fig, PictureFolder + filesep + "Lq_histogram.pdf");
-%[text] 
+%%
+%[text] ## W and W\_q Simulation calculations
+%[text] Below shows how to calculate the mean time in system and mean waiting time in system. These numbers are based on the simulation. We can compare these to the theory calculations. 
 %%
 %[text] ## Collect measurements of how long customers spend in the system
 %[text] This is a rather different calculation because instead of looking at log entries for each sample `ServiceQueue`, we'll look at the list of served  customers in each sample ServiceQueue.
@@ -275,6 +265,9 @@ fprintf("Mean waiting time in system: %f\n", meanWaitingInSystemSamples);
 %[text] ### Join them all into one big column.
 TimeInSystem = TimeInSystemSamples;   % already a numeric vector
 %%
+%[text] ## Histograms for W and W\_q
+%[text] Below we are creating histograms for W and W\_q. The blue bars represent the simulated data and the red dots simulate the theory calculations. We can use these graphs to see how well they line up.
+%%
 %[text] ## Pictures and stats for time customers spend in the system
 %[text] `Print out mean time spent in the system.`
 meanTimeInSystem = mean(TimeInSystem);
@@ -320,6 +313,10 @@ exportgraphics(fig, PictureFolder + filesep + "Wq_histogram.pdf");
 ServiceTimes = cellfun(@(q) cellfun(@(c) c.DepartureTime - c.BeginServiceTime, q.Served'), QSamples, UniformOutput=false);
 ServiceTimes = vertcat(ServiceTimes{:});
 CustomersServed = cellfun(@(q) length(q.Served), QSamples);
+%%
+%[text] ## Two other histograms
+%[text] The two histograms below show the service time distribution and the P\_n empirical vs theoretical results. The blue bars represent the simulated data and the red dots simulate the theory calculations.
+%%
 %histogram for service times
 fig = figure();
 t = tiledlayout(fig,1,1);
@@ -356,12 +353,9 @@ xlabel('n (number reneged)');
 ylabel('Probability');
 legend('Simulation', 'Overlay');
 title('P_n empirical vs theoretical results');
-
-
 %%
- 
-
-
+%[text] ## Theoretical calculations
+%[text] Below shows all of the mathematical calculations for the theoretical calculations. We use different formulas to calculate L, L\_q, W, W\_q. This section also includes questions 6 and 7 from part 4. 
 %%
 %[text] ## Part 4 question 5
 %[text] Average Value Estimates: 
