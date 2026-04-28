@@ -1,4 +1,4 @@
-%[text] # Run samples of the ServiceQueue\_Renege simulation: Group Eight
+%[text] # Run samples of the ServiceQueue\_Renege\_Extension simulation: Group Eight
 %[text] Collect statistics and plot histograms along the way.
 %%
 clear all
