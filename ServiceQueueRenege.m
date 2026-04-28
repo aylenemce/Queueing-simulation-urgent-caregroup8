@@ -4,7 +4,7 @@ classdef ServiceQueueRenege < ServiceQueue
         RenegeRate = 4;
     end
 
-    properties (SetAccess = private)
+    properties (SetAccess = public)
         RenegeDist
         Reneged = {}
     end
@@ -33,7 +33,6 @@ classdef ServiceQueueRenege < ServiceQueue
                 'mu', 1/obj.RenegeRate);
 
             % NEW:
-            % This creates the 5th column required by Section 3.3.2 [cite: 76]
             %obj.Log.NumReneged = zeros(0, 1, 'int64');
 
         end
@@ -45,19 +44,31 @@ classdef ServiceQueueRenege < ServiceQueue
 
             % NOW add reneging behavior only
             % This section would be deleted for the M/M/2 simulation
-            c = arrival.Customer;
-
-            patience_time = random(obj.RenegeDist);
-            obj.schedule_event(Renege(obj.Time + patience_time, c.Id));
-
-            % NEW:
-            % In an M/M/2 system, they only wait if NumInSystem > 2 (since 2 are being served).
-            %if obj.NumInSystem > obj.NumServers
             %c = arrival.Customer;
+
             %patience_time = random(obj.RenegeDist);
             %obj.schedule_event(Renege(obj.Time + patience_time, c.Id));
+
+            % NEW:
+            %if currentNumInSystem > obj.NumServers
+               % c = arrival.Customer;
+               % patience_time = random(obj.RenegeDist);
+               % obj.schedule_event(Renege(obj.Time + patience_time, c.Id));
             %end
 
+            isInQueue = false;
+            for i = 1:length(obj.Waiting)
+                if obj.Waiting{i}.Id == arrival.Customer.Id
+                    isInQueue = true;
+                    break;
+                end
+            end
+
+            if isInQueue
+                c = arrival.Customer;
+                patience_time = random(obj.RenegeDist);
+                obj.schedule_event(Renege(obj.Time + patience_time, c.Id));
+            end
         end
 
         function handle_renege(obj, event)
@@ -70,8 +81,7 @@ classdef ServiceQueueRenege < ServiceQueue
                     % DO NOT touch Waiting directly
                     % just ignore them in future processing
 
-                    % NEW:
-                    % 2. REMOVE them from the Waiting queue
+                    % NEW
                     obj.Waiting(i) = [];
 
                     return
@@ -85,7 +95,6 @@ classdef ServiceQueueRenege < ServiceQueue
             record_log@ServiceQueue(obj);
 
             % NEW:
-            % Add the total count of customers who have reneged to the last row
             %obj.Log.NumReneged(end) = length(obj.Reneged);
         end
     end
