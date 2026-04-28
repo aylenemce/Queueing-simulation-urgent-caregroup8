@@ -9,7 +9,7 @@ rehash toolboxcache
 PictureFolder = "Pictures";
 mkdir(PictureFolder);
 %%
-%[text] ## Report for renege feature simulation
+%[text] ## Renege feature simulation
 %[text] By: Sarah Kundrat, Sydney Morrison, and Aylene McEntire
 %[text] Introduction: 
 %[text] This simulation demonstrates how Chucktown Urgent Care operates when the reneging feature is added. The reneging feature adds impatience from the customers. It is still showing a M/M/1 model, which means there is still one doctor on site for an eight hour shift. 

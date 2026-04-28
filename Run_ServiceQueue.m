@@ -3,7 +3,7 @@
 PictureFolder = "Pictures";
 mkdir(PictureFolder); %[output:4664015f]
 %%
-%[text] ## Report for baseline simulation
+%[text] ## Baseline simulation
 %[text] By: Sarah Kundrat, Sydney Morrison, and Aylene McEntire
 %[text] Introduction: 
 %[text] This simulation demonstrates how Chucktown Urgent Care normally operates before a reneging feature is added. It is showing a M/M/1 model, this means there is only one doctor on site for an eight hour shift. 
