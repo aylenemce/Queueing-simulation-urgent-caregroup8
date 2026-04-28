@@ -305,7 +305,10 @@ ylabel(ax, "probability"); %[output:48525b55]
 legend(ax, "Simulation", "Theory"); %[output:48525b55]
 pause(2);
 exportgraphics(fig, PictureFolder + filesep + "Wq_histogram.pdf"); %[output:48525b55]
-
+%%
+%[text] ## Two other histograms
+%[text] The two histograms below show the service time distribution and the number of customers served per shift results.
+%%
 %Service time distribution
 ServiceTimes = cellfun(@(q) ...
     cellfun(@(c) c.DepartureTime - c.BeginServiceTime, q.Served'), ...
